@@ -1,0 +1,15 @@
+C:\Users\Matthew\Desktop\Proj\Hedgemen\bin\Debug\net6.0\Hedgemen.exe
+C:\Users\Matthew\Desktop\Proj\Hedgemen\bin\Debug\net6.0\Hedgemen.deps.json
+C:\Users\Matthew\Desktop\Proj\Hedgemen\bin\Debug\net6.0\Hedgemen.runtimeconfig.json
+C:\Users\Matthew\Desktop\Proj\Hedgemen\bin\Debug\net6.0\Hedgemen.dll
+C:\Users\Matthew\Desktop\Proj\Hedgemen\bin\Debug\net6.0\ref\Hedgemen.dll
+C:\Users\Matthew\Desktop\Proj\Hedgemen\bin\Debug\net6.0\Hedgemen.pdb
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.csproj.AssemblyReference.cache
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.AssemblyInfoInputs.cache
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.AssemblyInfo.cs
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.csproj.CoreCompileInputs.cache
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.dll
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\ref\Hedgemen.dll
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.pdb
+C:\Users\Matthew\Desktop\Proj\Hedgemen\obj\Debug\net6.0\Hedgemen.genruntimeconfig.cache
