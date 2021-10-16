@@ -1,7 +1,7 @@
 namespace Hgm
 {
-    public sealed class Globals
-    {
-        
-    }
+	public sealed class Globals
+	{
+		
+	}
 }

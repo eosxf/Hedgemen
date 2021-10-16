@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Hgm.Ecs
 {
-    public class GameEventTest : GameEvent
-    {
-        
-    }
+	public class GameEventTest : GameEvent
+	{
+		
+	}
 }

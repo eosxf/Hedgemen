@@ -1,14 +1,14 @@
 {
-    "FormattingOptions": {
-        "UseTabs": true,
-        "NewLine": "\n"
-    },
+	"FormattingOptions": {
+		"UseTabs": true,
+		"NewLine": "\n"
+	},
 
-    "TextEditorOptions": {
-        "tabsToSpaces": false
-    },
+	"TextEditorOptions": {
+		"tabsToSpaces": false
+	},
 
-    "RoslynExtensionsOptions": {
-        "enableDecompilationSupport": true
-    }
+	"RoslynExtensionsOptions": {
+		"enableDecompilationSupport": true
+	}
 }

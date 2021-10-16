@@ -17,4 +17,5 @@ C:\Users\Matthew\Desktop\Proj\Hedgemen\Hedgemen\obj\Debug\Hedgemen.dll
 C:\Users\Matthew\Desktop\Proj\Hedgemen\Hedgemen\obj\Debug\ref\Hedgemen.dll
 C:\Users\Matthew\Desktop\Proj\Hedgemen\Hedgemen\obj\Debug\Hedgemen.pdb
 C:\Users\Matthew\Desktop\Proj\Hedgemen\Hedgemen\obj\Debug\Hedgemen.genruntimeconfig.cache
-C:\Users\Matthew\Desktop\Proj\Hedgemen\Hedgemen\obj\Debug\Hedgemen.csproj.CopyComplete
+C:\Users\Matthew\Desktop\Proj\Hedgemen\Build\sentient_apple_pie_schema.json
+C:\Users\Matthew\Desktop\Proj\Hedgemen\Build\food.json

@@ -4,9 +4,9 @@ namespace Hgm.Utilities
 {
 	public static class DictionaryExtensions
 	{
-		public static TV Get<TK, TV>(this IDictionary<TK, TV> self, TK key)
+		public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key)
 		{
-			TV val = default;
+			TValue val = default;
 			self.TryGetValue(key, out val);
 			return val;
 		}
