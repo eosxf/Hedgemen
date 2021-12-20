@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Hgm.Ecs
 {
+	/// <summary>
+	/// Component for GameObject entities.
+	/// </summary>
 	public abstract class Part : IComponent<GameObject>
 	{
 		private GameObject self;
@@ -30,8 +34,9 @@ namespace Hgm.Ecs
 
 			if(registeredEvents.ContainsKey(typeof(TEvent)))
 				throw new Exception($"Event type {typeof(TEvent).FullName} already registered.");
-			
-			registeredEvents.Add(typeof(TEvent), (handle) => { e(handle as TEvent); });
+
+			PartEvent partEvent = [MethodImpl(MethodImplOptions.AggressiveInlining)](handle) => { e(handle as TEvent); };
+			registeredEvents.Add(typeof(TEvent), partEvent);
 		}
 
 		public abstract ComponentInfo QueryComponentInfo();

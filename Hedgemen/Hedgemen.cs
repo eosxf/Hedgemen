@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.Text.Json;
 using Hgm.Ecs;
 using Hgm.Ecs.Text;
@@ -32,21 +31,20 @@ namespace Hgm
 			Console.WriteLine(applePieSchema.RegistryName);
 			Console.WriteLine(applePieSchema.Parts.Count);
 			Console.WriteLine(applePieSchema.Parts[0].Fields["healing_amount"]);
-
-			/*var foodSchema = JsonSerializer.Deserialize<PartSchema>(new File("food.json").ReadString());
-			Console.WriteLine(foodSchema.Fields.Count);
-			Console.WriteLine(foodSchema.RegistryName);
-			Console.WriteLine(foodSchema.Fields["healing_amount"]);*/
-
-			spriteBatch = new SpriteBatch(manager.GraphicsDevice);
+			
 			var test = new GameObject();
 			test.AddPart(new MovementPart { Speed = 1025 });
+			test.AddPart(new SentiencePart() { Intelligence = 2 });
 			test.HandleEvent(new GameEventTest());
+			var isSmartEnough = test.HandleEvent(new IsSmartEnoughEvent(5));
 
 			Console.WriteLine($"Speed: {test.GetPart<IMovement>().Speed}");
+			Console.WriteLine($"Is smart enough?: {isSmartEnough.Evalutation}");
 
 			if(test.WillRespondToEvent<ConsoleWriteMessageEvent>())
 				test.HandleEvent(new ConsoleWriteMessageEvent("Hello Parts! Write me!"));
+
+			spriteBatch = new SpriteBatch(manager.GraphicsDevice);
 		}
 
 		protected override void Update(GameTime gameTime)

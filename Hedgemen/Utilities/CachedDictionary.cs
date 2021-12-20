@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Hgm.Utilities
 {
-	public class DictionaryCached<TKey, TValue> : IDictionary<TKey, TValue>
+	public class CachedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 	{
 		private IDictionary<TKey, TValue> dictionary = new Dictionary<TKey, TValue>();
 		private IList<TKey> keys = new List<TKey>();

@@ -9,7 +9,7 @@ namespace Hgm.Ecs
 
 	public class GameObject : IEntity
 	{
-		private IDictionary<Type, Part> parts = new DictionaryCached<Type, Part>();
+		private IDictionary<Type, Part> parts = new CachedDictionary<Type, Part>();
 
 		public GameObject()
 		{
@@ -27,14 +27,17 @@ namespace Hgm.Ecs
 			return parts.Get(typeof(T)) as T;
 		}
 
-		public bool HandleEvent(GameEvent e)
+		public TEvent HandleEvent<TEvent>(TEvent e) where TEvent : GameEvent
 		{
+			if (!WillRespondToEvent<TEvent>()) return e;
+			
 			foreach(var part in parts.Values)
 			{
-				part.HandleEvent(e);
+				bool result = part.HandleEvent(e);
+				if (result) e.Handled = true;
 			}
-
-			return false;
+			
+			return e;
 		}
 
 		public bool HasPart<T>() where T : class

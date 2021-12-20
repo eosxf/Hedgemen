@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Hgm.Ecs
 {
+	/// <summary>
+	/// Component for Cell Entities.
+	/// </summary>
 	public abstract class Expanse : IComponent<Cell>
 	{
 		private Cell self;

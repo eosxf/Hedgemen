@@ -8,26 +8,24 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Matthew\\.nuget\\packages\\": {}
+    "C:\\Users\\Matth\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Matthew\\Desktop\\Proj\\Hedgemen\\Hedgemen\\Hedgemen.csproj",
+      "projectUniqueName": "E:\\Project\\Hedgemen\\Hedgemen\\Hedgemen.csproj",
       "projectName": "Hedgemen",
-      "projectPath": "C:\\Users\\Matthew\\Desktop\\Proj\\Hedgemen\\Hedgemen\\Hedgemen.csproj",
-      "packagesPath": "C:\\Users\\Matthew\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Matthew\\Desktop\\Proj\\Hedgemen\\Hedgemen\\obj\\",
+      "projectPath": "E:\\Project\\Hedgemen\\Hedgemen\\Hedgemen.csproj",
+      "packagesPath": "C:\\Users\\Matth\\.nuget\\packages\\",
+      "outputPath": "E:\\Project\\Hedgemen\\Hedgemen\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Matthew\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Matth\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -60,7 +58,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100-rc.1.21463.6\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "E:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }
