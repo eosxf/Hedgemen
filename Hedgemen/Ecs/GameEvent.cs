@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Hgm.Ecs;
 
-namespace Hgm.Ecs
+public abstract class GameEvent
 {
-	public abstract class GameEvent
-	{
-		public bool Handled { get; set; } = false;
-	}
+	public bool Handled = false;
 }

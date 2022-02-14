@@ -1,4 +1,5 @@
 using System;
+using Hgm.Ecs.Serialization;
 
 namespace Hgm.Ecs
 {
@@ -25,6 +26,16 @@ namespace Hgm.Ecs
 		}
 
 		public bool WillRespondToEvent(Type eventType)
+		{
+			throw new NotImplementedException();
+		}
+
+		public SerializedInfo GetSerializedInfo()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ReadSerializedInfo(SerializedInfo info)
 		{
 			throw new NotImplementedException();
 		}

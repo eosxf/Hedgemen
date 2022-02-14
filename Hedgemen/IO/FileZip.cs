@@ -11,6 +11,9 @@ namespace Hgm.Engine.IO
 
         public FileZip(string zipPath, FsType fsType = FsType.Local) : base(zipPath, fsType)
         {
+            IFile file = new File(zipPath);
+            if(!file.Exists)
+                ZipFile.CreateFromDirectory(file.Directory.FullName, file.Name);
             archive = new ZipArchive(Open(), ZipArchiveMode.Update, false);
         }
 
@@ -31,6 +34,12 @@ namespace Hgm.Engine.IO
         internal ZipArchiveEntry GetEntryUnwrapped(string filePath)
         {
             return archive.GetEntry(filePath);
+        }
+
+        // todo remove eventually
+        public ZipArchiveEntry CreateEntryUnwrapped(string filePath)
+        {
+            return archive.CreateEntry(filePath);
         }
 
         public FileZipEntry GetEntry(string filePath)

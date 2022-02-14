@@ -8,6 +8,11 @@ namespace Hgm.Register
 {
     public struct NamespacedString
     {
+        public static string DefaultNamespace => "any";
+        public static string DefaultName => "null";
+
+        public static NamespacedString Default => new (DefaultNamespace, DefaultName);
+        
         private string nameSpace;
         private string name;
 
@@ -16,7 +21,7 @@ namespace Hgm.Register
         {
             string[] fullyQualifiedStringSplit = fullyQualifiedString.Split(':');
             
-            if(fullyQualifiedStringSplit.Length != 2)
+            if(!IsValidQualifiedString(fullyQualifiedString))
                 throw new ArgumentException($"String {fullyQualifiedString} is not a valid namespaced string!");
 
             nameSpace = fullyQualifiedStringSplit[0];
@@ -30,12 +35,43 @@ namespace Hgm.Register
         }
 
         [JsonIgnore]
-        public string Namespace => nameSpace;
+        public string Namespace
+        {
+            get
+            {
+                nameSpace ??= DefaultNamespace;
+                return nameSpace;
+            }
+
+            set => nameSpace = value;
+        }
 
         [JsonIgnore]
-        public string Name => name;
+        public string Name
+        {
+            get
+            {
+                name ??= DefaultName;
+                return name;
+            }
+
+            set => name = value;
+        }
 
         [JsonPropertyName("name")]
         public string FullName => nameSpace + ':' + name;
+        
+        private static bool IsValidQualifiedString(string fullyQualifiedString)
+        {
+            string[] fullyQualifiedStringSplit = fullyQualifiedString.Split(':');
+
+            bool correctNumberOfSplits = fullyQualifiedStringSplit.Length == 2;
+            bool noSpaces = !fullyQualifiedString.Contains(' ');
+
+            return correctNumberOfSplits && noSpaces;
+        }
+
+        public static implicit operator NamespacedString(string val) => new NamespacedString(val);
+        public static implicit operator string(NamespacedString val) => val.FullName;
     }
 }

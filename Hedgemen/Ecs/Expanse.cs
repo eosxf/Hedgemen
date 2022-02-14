@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hgm.Ecs.Serialization;
 
 namespace Hgm.Ecs
 {
@@ -13,6 +14,16 @@ namespace Hgm.Ecs
 		private Cell self;
 		public Cell Self => self;
 
+		public void InitializeFromDefault()
+		{
+			
+		}
+
+		public void InitializeFromSchema()
+		{
+			
+		}
+
 		public bool IsActive { get; set; } = true;
 
 		public bool HandleEvent(GameEvent e)
@@ -22,12 +33,12 @@ namespace Hgm.Ecs
 
 		public bool IsEventRegistered<TEvent>() where TEvent : GameEvent
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public bool IsEventRegistered(Type eventType)
 		{
-			throw new NotImplementedException();
+			return false;
 		}
 
 		public abstract ComponentInfo QueryComponentInfo();
@@ -35,6 +46,16 @@ namespace Hgm.Ecs
 		public void RegisterEvent<TEvent>(EventWrapper<TEvent> e) where TEvent : GameEvent
 		{
 			
+		}
+
+		public SerializedInfo GetSerializedInfo()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ReadSerializedInfo(SerializedInfo info)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
