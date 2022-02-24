@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Hgm.Ecs.Serialization;
+using Hgm.IO.Serialization;
 using Hgm.Utilities;
 
 namespace Hgm.Ecs;
 
 public delegate void PartEvent(GameEvent e);
 
-public class GameObject : IEntity
+public class Entity : IEntity
 {
 	private IDictionary<Type, Part> _parts = new CachedDictionary<Type, Part>();
 
@@ -28,7 +28,7 @@ public class GameObject : IEntity
 		return _parts.Get(typeof(T)) as T;
 	}
 
-	public TEvent HandleEvent<TEvent>(TEvent e) where TEvent : GameEvent
+	public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
 	{
 		foreach(var part in _parts.Values)
 		{
@@ -57,18 +57,18 @@ public class GameObject : IEntity
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool WillRespondToEvent(GameEvent e)
+	public bool WillRespondTo(GameEvent e)
 	{
-		return WillRespondToEvent(e.GetType());
+		return WillRespondTo(e.GetType());
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool WillRespondToEvent<TEvent>() where TEvent : GameEvent
+	public bool WillRespondTo<TEvent>() where TEvent : GameEvent
 	{
-		return WillRespondToEvent(typeof(TEvent));
+		return WillRespondTo(typeof(TEvent));
 	}
 
-	public bool WillRespondToEvent(Type eventType)
+	public bool WillRespondTo(Type eventType)
 	{
 		foreach(var part in _parts.Values)
 		{
@@ -81,22 +81,22 @@ public class GameObject : IEntity
 
 	public SerializedInfo GetSerializedInfo()
 	{
-		var info = new SerializedInfo(this);
-
+		var fields = new SerializedFields();
+		
 		foreach (var part in _parts.Values)
 		{
-			info.Add(part.QueryComponentInfo().RegistryName, part.GetSerializedInfo());
+			fields.Add(part.QueryComponentInfo().RegistryName, part.GetSerializedInfo());
 		}
 
-		return info;
+		return new SerializedInfo(this, fields);
 	}
 
 	public void ReadSerializedInfo(SerializedInfo info)
 	{
-		foreach (var partName in info)
+		foreach (var partName in info.Fields)
 		{
-			var partSerializedInfo = info.Get<SerializedInfo>(partName);
-			var part = partSerializedInfo.ConstructObject(Global.GetHedgemen().Globals.RegisteredAssemblies) as Part;
+			var partSerializedInfo = info.Fields.Get<SerializedInfo>(partName.Key);
+			var part = partSerializedInfo.Instantiate<Part>(Global.GetHedgemen().Globals.RegisteredAssemblies);
 			var partInfo = part.QueryComponentInfo();
 			_parts.Add(partInfo.AccessType, part);
 		}

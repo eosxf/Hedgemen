@@ -1,4 +1,4 @@
-﻿namespace Hgm.Ecs.Serialization;
+﻿namespace Hgm.IO.Serialization;
 
 public interface ISerializableInfo
 {

@@ -1,4 +1,5 @@
-﻿using Hgm.Ecs.Serialization;
+﻿using System;
+using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 
@@ -14,36 +15,22 @@ public class CharacterSheet : Part
 	public int Wisdom { get; set; }
 	public int Charisma { get; set; }
 	
-	public override SerializedInfo GetSerializedInfo()
-	{
-		return new SerializedInfo(this)
-		{
-			{"strength", Strength},
-			{"dexterity", Dexterity},
-			{"constitution", Constitution},
-			{"intelligence", Intelligence},
-			{"wisdom", Wisdom},
-			{"charisma", Charisma}
-		};
-	}
-
-	public override void ReadSerializedInfo(SerializedInfo info)
-	{
-		Strength = info.Get<int>("strength");
-		Dexterity = info.Get<int>("dexterity");
-		Constitution = info.Get<int>("constitution");
-		Intelligence = info.Get<int>("intelligence");
-		Wisdom = info.Get<int>("wisdom");
-		Charisma = info.Get<int>("charisma");
-	}
-	
 	public CharacterClass Class { get; set; }
-
+	
 	public CharacterSheet()
 	{
 		Class = new CharacterClass();
+		
+		RegisterEvent<GameChangeClassEvent>(ChangeClass);
 	}
 
+	public void ChangeClass(GameChangeClassEvent e)
+	{
+		var oldClass = Class.ClassName;
+		Class.ClassName = e.ClassName;
+		Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
+	}
+	
 	public override ComponentInfo QueryComponentInfo()
 	{
 		return new ComponentInfo
@@ -52,5 +39,33 @@ public class CharacterSheet : Part
 			AccessType = typeof(CharacterSheet),
 			PropagatesIgnoredEvents = true
 		};
+	}
+
+	public override SerializedInfo GetSerializedInfo()
+	{
+		var fields = new SerializedFields
+		{
+			{"strength", Strength},
+			{"dexterity", Dexterity},
+			{"constitution", Constitution},
+			{"intelligence", Intelligence},
+			{"wisdom", Wisdom},
+			{"charisma", Charisma},
+			{"class", Class.GetSerializedInfo()}
+		};
+
+		return new SerializedInfo(this, fields);
+	}
+
+	public override void ReadSerializedInfo(SerializedInfo info)
+	{
+		var fields = info.Fields;
+		Strength = fields.Get<int>("strength");
+		Dexterity = fields.Get<int>("dexterity");
+		Constitution = fields.Get<int>("constitution");
+		Intelligence = fields.Get<int>("intelligence");
+		Wisdom = fields.Get<int>("wisdom");
+		Charisma = fields.Get<int>("charisma");
+		Class = fields.Get("class").Instantiate<CharacterClass>();
 	}
 }

@@ -8,11 +8,23 @@
 		<Platforms>AnyCPU</Platforms>
 		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
 		<Nullable>disable</Nullable>
-		<RunWorkingDirectory>../Build/</RunWorkingDirectory>
-		<OutputPath>../Build</OutputPath>
+		<RunWorkingDirectory>../Build.AoT/</RunWorkingDirectory>
+		<OutputPath>../Build.AoT</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+		<InvariantGlobalization>false</InvariantGlobalization>
+		<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+		<IlcGenerateStackTraceData>true</IlcGenerateStackTraceData>
+		<IlcTrimMetadata>false</IlcTrimMetadata>
+		<IlcDisableReflection>false</IlcDisableReflection>
+		<IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+		<IlcFoldIdenticalMethodBodies>false</IlcFoldIdenticalMethodBodies>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<RdXmlFile Include="rd.xml" />
+	</ItemGroup>
 
 	<Choose>
 	  <When Condition=" '$(Configuration)'=='Debug' ">
@@ -26,10 +38,6 @@
 		  </PropertyGroup>
 	  </When>
 	</Choose>
-
-	<!--<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-	</ItemGroup>-->
 	
 	<ItemGroup>
 		<Reference Include="FNA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
@@ -38,14 +46,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-alpha.1.21423.2" />
+	</ItemGroup>
+
+	<ItemGroup>
 	<ContentWithTargetPath Include="../res/**">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
 	</ContentWithTargetPath>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="Hedgemen.AoT.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Hgm.Ecs.Serialization;
+using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs
 {
 	/// <summary>
 	/// Component for Cell Entities.
 	/// </summary>
-	public abstract class Expanse : IComponent<Cell>
+	public abstract class Expanse : IComponent
 	{
 		private Cell self;
 		public Cell Self => self;

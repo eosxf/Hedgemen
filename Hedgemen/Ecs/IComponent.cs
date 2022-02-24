@@ -1,5 +1,5 @@
 using System;
-using Hgm.Ecs.Serialization;
+using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 
@@ -9,7 +9,7 @@ public delegate void EventWrapper<TEvent>(TEvent e) where TEvent : GameEvent;
 /// Composition focused objects for <see cref="Hgm.Ecs.IEntity"/> that can handle events and contain data.
 /// </summary>
 /// <typeparam name="TEntity"></typeparam>
-public interface IComponent<out TEntity> :  ISerializableInfo where TEntity : IEntity
+public interface IComponent :  ISerializableInfo
 {
 	public void InitializeFromDefault();
 	public void InitializeFromSchema(); // todo add schema class

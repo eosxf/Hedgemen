@@ -1,11 +1,11 @@
 using System;
-using Hgm.Ecs.Serialization;
+using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs
 {
 	public class Cell : IEntity
 	{
-		public TEvent HandleEvent<TEvent>(TEvent e) where TEvent : GameEvent
+		public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
 		{
 			return e;
 		}
@@ -15,17 +15,17 @@ namespace Hgm.Ecs
 			throw new NotImplementedException();
 		}
 
-		public bool WillRespondToEvent(GameEvent e)
+		public bool WillRespondTo(GameEvent e)
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool WillRespondToEvent<TEvent>() where TEvent : GameEvent
+		public bool WillRespondTo<TEvent>() where TEvent : GameEvent
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool WillRespondToEvent(Type eventType)
+		public bool WillRespondTo(Type eventType)
 		{
 			throw new NotImplementedException();
 		}

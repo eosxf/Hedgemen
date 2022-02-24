@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Hgm.Ecs.Serialization;
+using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs
 {
 	/// <summary>
-	/// Component for GameObject entities.
+	/// Component class for <see cref="Hgm.Ecs.Entity"/>
 	/// </summary>
-	public abstract class Part : IComponent<GameObject>
+	public abstract class Part : IComponent
 	{
-		private GameObject self;
-		public GameObject Self => self;
+		private Entity self;
+		public Entity Self => self;
 
 		public virtual void InitializeFromDefault()
 		{
@@ -45,8 +43,10 @@ namespace Hgm.Ecs
 			if(registeredEvents.ContainsKey(typeof(TEvent)))
 				throw new Exception($"Event type {typeof(TEvent).FullName} already registered.");
 
-			PartEvent partEvent = [MethodImpl(MethodImplOptions.AggressiveInlining)](handle) => { e(handle as TEvent); };
-			registeredEvents.Add(typeof(TEvent), partEvent);
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			void PartEvent(GameEvent handle) => e(handle as TEvent);
+
+			registeredEvents.Add(typeof(TEvent), PartEvent);
 		}
 
 		public virtual void OnEventPropagated(GameEvent gameEvent)
@@ -57,7 +57,7 @@ namespace Hgm.Ecs
 		public abstract ComponentInfo QueryComponentInfo();
 		public virtual SerializedInfo GetSerializedInfo()
 		{
-			return new SerializedInfo(this);
+			return new SerializedInfo(this, new SerializedFields());
 		}
 
 		public virtual void ReadSerializedInfo(SerializedInfo info)

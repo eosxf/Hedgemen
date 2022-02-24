@@ -8,6 +8,13 @@ namespace Hgm.Ecs
 	/// </summary>
 	public readonly struct ComponentInfo
 	{
+		public static ComponentInfo New(IComponent obj) => new()
+		{
+			RegistryName = NamespacedString.Default,
+			AccessType = obj.GetType(),
+			PropagatesIgnoredEvents = false
+		};
+		
 		public NamespacedString RegistryName { get; init; }
 		
 		/// <summary>
