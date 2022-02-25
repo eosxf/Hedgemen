@@ -2,5 +2,5 @@
 
 public interface IGameEventHandler
 {
-    public void HandleEvent(GameEvent gameEvent);
+    public void Propagate(GameEvent gameEvent);
 }

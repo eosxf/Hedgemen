@@ -42,10 +42,18 @@
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
 	</ContentWithTargetPath>
+	<ContentWithTargetPath Update="..\res\player.json">
+	  <Link>res\player.json</Link>
+	</ContentWithTargetPath>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Include="Hedgemen.AoT.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Base" />
+	  <Folder Include="Ecs\Systems" />
 	</ItemGroup>
 
 </Project>

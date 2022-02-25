@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Hgm.Register
 {
@@ -70,6 +67,8 @@ namespace Hgm.Register
 
             return correctNumberOfSplits && noSpaces;
         }
+
+        public override string ToString() => FullName;
 
         public static implicit operator NamespacedString(string val) => new NamespacedString(val);
         public static implicit operator string(NamespacedString val) => val.FullName;

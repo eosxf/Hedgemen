@@ -19,13 +19,14 @@ public class Entity : IEntity
 		if (_parts.ContainsKey(infoQuery.AccessType))
 			throw new ArgumentException($"{GetType().Name} already has a {nameof(Part)} with an AccessType of " +
 						                    $"{infoQuery.AccessType.FullName}");
-		
+		part.AttachEntity(this);
 		_parts.Add(infoQuery.AccessType, part);
 	}
 
 	public T GetPart<T>() where T : class
 	{
-		return _parts.Get(typeof(T)) as T;
+		_parts.TryGetValue(typeof(T), out var part);
+		return part as T;
 	}
 
 	public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
@@ -35,6 +36,9 @@ public class Entity : IEntity
 			if (!part.IsActive) continue;
 			
 			var info = part.QueryComponentInfo();
+
+			if (!e.IsProperlyInitialized())
+				throw new InvalidOperationException($"Event: {e} is not properly initialized.");
 			
 			if (part.IsEventRegistered<TEvent>())
 			{
@@ -96,9 +100,8 @@ public class Entity : IEntity
 		foreach (var partName in info.Fields)
 		{
 			var partSerializedInfo = info.Fields.Get<SerializedInfo>(partName.Key);
-			var part = partSerializedInfo.Instantiate<Part>(Global.GetHedgemen().Globals.RegisteredAssemblies);
-			var partInfo = part.QueryComponentInfo();
-			_parts.Add(partInfo.AccessType, part);
+			var part = partSerializedInfo.Instantiate<Part>(Hedgemen.RegisteredAssemblies);
+			AddPart(part);
 		}
 	}
 }

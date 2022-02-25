@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Hgm.Engine.IO
+namespace Hgm.IO
 {
 	public static class DirectoryInfoExtensions
 	{

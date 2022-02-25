@@ -20,10 +20,10 @@ public class SerializedFields : Dictionary<string, object>
 		
 	}
 
-	public T Get<T>(string key, JsonSerializerOptions options = null)
+	public T Get<T>(string key, T defaultReturn = default, JsonSerializerOptions options = null)
 	{
 		var val = this[key];
-		T obj = default;
+		var obj = defaultReturn;
 		
 		if (val is JsonObject jsonObject)
 		{
@@ -34,9 +34,9 @@ public class SerializedFields : Dictionary<string, object>
 		{
 			obj = jsonElement.Deserialize<T>(options);
 		}
-		
+
 		return obj;
 	}
 
-	public SerializedInfo Get(string key, JsonSerializerOptions options = null) => Get<SerializedInfo>(key, options);
+	public SerializedInfo Get(string key, JsonSerializerOptions options = null) => Get<SerializedInfo>(key, null, options);
 }

@@ -1,4 +1,4 @@
-﻿namespace Hgm.Engine.IO
+﻿namespace Hgm.IO
 {
 	public interface IFileSystem
 	{

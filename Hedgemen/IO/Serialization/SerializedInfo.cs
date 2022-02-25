@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -57,7 +56,7 @@ public class SerializedInfo
 	
 	public ISerializableInfo Instantiate(IReadOnlyDictionary<string, Assembly> registeredAssemblies = null)
 	{
-		registeredAssemblies ??= Global.GetHedgemen().Globals.RegisteredAssemblies;
+		registeredAssemblies ??= Hedgemen.RegisteredAssemblies;
 		// we need a way to access assemblies because NativeAoT doesn't allow you to get assemblies via
 		// Activator.CreateInstance(assemblyName, typeName). Aka, eat my ass, NativeAoT. Jk, love you
 		var assembly = registeredAssemblies[_assemblyName];

@@ -1,4 +1,4 @@
-﻿namespace Hgm.Util
+﻿namespace Hgm.Utilities
 {
 	public interface ILogger
 	{

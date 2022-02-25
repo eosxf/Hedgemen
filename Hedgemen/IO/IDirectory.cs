@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Hgm.Engine.IO
+namespace Hgm.IO
 {
     public delegate bool FileListFilter(IFile fileHandle);
 

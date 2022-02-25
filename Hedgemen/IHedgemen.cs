@@ -6,6 +6,5 @@ namespace Hgm
 	{
 		public void Run();
 		public void Exit();
-		public Globals Globals { get; }
 	}
 }

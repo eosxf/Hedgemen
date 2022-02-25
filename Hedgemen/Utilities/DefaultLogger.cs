@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace Hgm.Util
+namespace Hgm.Utilities
 {
-	public class HedgemenLogger : ILogger
+	public class DefaultLogger : ILogger
 	{
 		public LogLevel LogLevel { get; set; } = LogLevel.Debug;
 		
@@ -14,7 +14,7 @@ namespace Hgm.Util
 
 		private StringBuilder builder;
 		
-		public HedgemenLogger()
+		public DefaultLogger()
 		{
 			builder = new StringBuilder();
 		}

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs
@@ -10,15 +10,19 @@ namespace Hgm.Ecs
 	/// </summary>
 	public abstract class Part : IComponent
 	{
-		private Entity self;
-		public Entity Self => self;
+		private Entity _self;
+		public Entity Self => _self;
 
-		public virtual void InitializeFromDefault()
+		public void AttachEntity(Entity entity)
 		{
-			
+			if (_self != null)
+				throw new InvalidOperationException($"An entity is already attached to part: {this}");
+			_self = entity;
 		}
 
-		public virtual void InitializeFromSchema()
+		public virtual void InitializeFromSchema(ComponentSchema schema) => InitializeFromFields(schema.Fields);
+
+		public virtual void InitializeFromFields(SerializedFields fields)
 		{
 			
 		}
@@ -42,8 +46,7 @@ namespace Hgm.Ecs
 
 			if(registeredEvents.ContainsKey(typeof(TEvent)))
 				throw new Exception($"Event type {typeof(TEvent).FullName} already registered.");
-
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			
 			void PartEvent(GameEvent handle) => e(handle as TEvent);
 
 			registeredEvents.Add(typeof(TEvent), PartEvent);
@@ -60,10 +63,7 @@ namespace Hgm.Ecs
 			return new SerializedInfo(this, new SerializedFields());
 		}
 
-		public virtual void ReadSerializedInfo(SerializedInfo info)
-		{
-			
-		}
+		public virtual void ReadSerializedInfo(SerializedInfo info) => InitializeFromFields(info.Fields);
 
 		public bool IsEventRegistered<TEvent>() where TEvent : GameEvent
 		{

@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace Hgm.Engine.IO
+namespace Hgm.IO
 {
 	public class FileZipEntry : IFile
 	{

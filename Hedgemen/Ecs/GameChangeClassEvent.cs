@@ -1,13 +1,13 @@
-﻿using System;
-
-namespace Hgm.Ecs;
+﻿namespace Hgm.Ecs;
 
 public class GameChangeClassEvent : GameEvent
 {
-	public string ClassName { get; set; } = String.Empty;
+	public string ClassName { get; set; }
 	
 	public GameChangeClassEvent(string className)
 	{
 		ClassName = className;
 	}
+
+	public override bool IsProperlyInitialized() => ClassName != null;
 }

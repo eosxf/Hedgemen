@@ -2,62 +2,62 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Hgm.Engine.IO
+namespace Hgm.IO
 {
 	public class File : IFile
 	{
-        protected readonly FileInfo info;
+        private readonly FileInfo _info;
 
         public FsType Type { get; private set; }
         public FileAccess Access { get; set; } = FileAccess.ReadWrite;
         public FileShare Share { get; set; } = FileShare.ReadWrite;
         public Encoding Encoding { get; set; } = Encoding.UTF8;
 
-        private string evaluatedPath;
+        private string _evaluatedPath;
 
         public File(string filePath, FsType fsType = FsType.Local)
         {
-            this.evaluatedPath = EvaluatePath(filePath, fsType);
-            this.info = new FileInfo(this.evaluatedPath);
-            this.Type = fsType;
+            _evaluatedPath = EvaluatePath(filePath, fsType);
+            _info = new FileInfo(_evaluatedPath);
+            Type = fsType;
         }
 
         internal File(FileInfo fileInfo, FsType fsType)
         {
-            this.evaluatedPath = EvaluatePath(fileInfo.FullName, fsType);
-            this.info = new FileInfo(this.evaluatedPath);
-            this.Type = fsType;
+            _evaluatedPath = EvaluatePath(fileInfo.FullName, fsType);
+            _info = new FileInfo(this._evaluatedPath);
+            Type = fsType;
         }
 
-        public bool Exists => info.Exists;
+        public bool Exists => _info.Exists;
 
-		public IDirectory Directory => new Directory(info.Directory, Type);
+		public IDirectory Directory => new Directory(_info.Directory, Type);
 
-		public long Length => info.Length;
+		public long Length => _info.Length;
 
-		public string Name => info.Name;
+		public string Name => _info.Name;
 
 		public string DirectoryName => Directory.Name;
 
-		public bool IsReadOnly => info.IsReadOnly;
+		public bool IsReadOnly => _info.IsReadOnly;
 
-		public FileAttributes Attributes => info.Attributes;
+		public FileAttributes Attributes => _info.Attributes;
 
-		public string Extension => info.Extension;
+		public string Extension => _info.Extension;
 
-		public DateTime CreationTime => info.CreationTime;
+		public DateTime CreationTime => _info.CreationTime;
 
-		public string FullName => info.FullName;
+		public string FullName => _info.FullName;
 
-		public DateTime CreationTimeUtc => info.CreationTimeUtc;
+		public DateTime CreationTimeUtc => _info.CreationTimeUtc;
 
-		public DateTime LastAccessTime => info.LastAccessTime;
+		public DateTime LastAccessTime => _info.LastAccessTime;
 
-		public DateTime LastWriteTime => info.LastWriteTime;
+		public DateTime LastWriteTime => _info.LastWriteTime;
 		
-		public DateTime LastAccessTimeUtc => info.LastAccessTimeUtc;
+		public DateTime LastAccessTimeUtc => _info.LastAccessTimeUtc;
 
-		public DateTime LastWriteTimeUtc => info.LastWriteTimeUtc;
+		public DateTime LastWriteTimeUtc => _info.LastWriteTimeUtc;
 
         protected virtual string EvaluatePath(string filePath, FsType fsType)
         {
@@ -78,17 +78,17 @@ namespace Hgm.Engine.IO
 		{
 			if (Exists) return;
 			Directory.Create();
-			info.Create().Close();
+			_info.Create().Close();
 		}
 
 		public void Delete()
 		{
-			info.Delete();
+			_info.Delete();
 		}
 		
 		public virtual Stream Open(FileMode mode = FileMode.Open)
 		{
-			return info.Open(mode, Access, Share);
+			return _info.Open(mode, Access, Share);
 		}
 
 		public void WriteString(string text)
@@ -131,12 +131,12 @@ namespace Hgm.Engine.IO
 		public void CopyTo(IFile dest, bool overwrite = true)
 		{
 			dest.Directory.Create();
-			info.CopyTo(dest.FullName, overwrite);
+			_info.CopyTo(dest.FullName, overwrite);
 		}
 
 		public void MoveTo(IFile dest, bool overwrite = true)
 		{
-			info.MoveTo(dest.FullName, overwrite);
+			_info.MoveTo(dest.FullName, overwrite);
 		}
 		
 		public IFile CopyTo(IDirectory dest, string name, bool overwrite = true)
@@ -168,7 +168,7 @@ namespace Hgm.Engine.IO
 		public override int GetHashCode()
 		{
 			int hash = 1;
-			hash = hash * 37 + info.GetHashCode();
+			hash = hash * 37 + _info.GetHashCode();
 			hash = hash * 67 + FullName.GetHashCode();
 			return hash;
 		}

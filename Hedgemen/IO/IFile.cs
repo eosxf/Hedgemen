@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Hgm.Engine.IO
+namespace Hgm.IO
 {
     public interface IFile
     {

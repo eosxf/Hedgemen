@@ -21,7 +21,7 @@ public class CharacterClass : IGameEventHandler, ISerializableInfo
 		ClassName = info.Fields.Get<string>("class_name");
 	}
 
-	public void HandleEvent(GameEvent gameEvent)
+	public void Propagate(GameEvent gameEvent)
 	{
 		
 	}

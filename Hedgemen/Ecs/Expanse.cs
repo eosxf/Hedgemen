@@ -1,4 +1,5 @@
 using System;
+using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs
@@ -16,9 +17,19 @@ namespace Hgm.Ecs
 			
 		}
 
-		public void InitializeFromSchema()
+		public void Initialize()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void InitializeFromSchema(ComponentSchema schema)
 		{
 			
+		}
+
+		public void InitializeFromFields(SerializedFields fields)
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool IsActive { get; set; } = true;

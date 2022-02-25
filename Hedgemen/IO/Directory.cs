@@ -3,63 +3,63 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Hgm.Engine.IO
+namespace Hgm.IO
 {
     public class Directory : IDirectory
     {
-        private readonly DirectoryInfo info;
+        private readonly DirectoryInfo _info;
 		public FsType Type { get; protected set; }
 
-        private string evaluatedPath;
+        private string _evaluatedPath;
 
         public Directory(string directoryPath, FsType fsType = FsType.Local)
         {
-            this.evaluatedPath = EvaluatePath(directoryPath, fsType);
-            this.info = new DirectoryInfo(evaluatedPath);
-            this.Type = fsType;
+            _evaluatedPath = EvaluatePath(directoryPath, fsType);
+            _info = new DirectoryInfo(_evaluatedPath);
+            Type = fsType;
         }
 
         internal Directory(DirectoryInfo directoryInfo, FsType fsType)
         {
-            this.evaluatedPath = EvaluatePath(directoryInfo.Name, fsType);
-            this.info = directoryInfo;
-            this.Type = fsType;
+            _evaluatedPath = EvaluatePath(directoryInfo.Name, fsType);
+            _info = directoryInfo;
+            Type = fsType;
         }
 
-        public bool Exists => info.Exists;
+        public bool Exists => _info.Exists;
 
-		public string Name => info.Name;
+		public string Name => _info.Name;
 
-		public IDirectory Parent => (info.Parent == null) ? null : new Directory(info.Parent, Type);
+		public IDirectory Parent => (_info.Parent == null) ? null : new Directory(_info.Parent, Type);
 		
-		public IDirectory Root => new Directory(info.Root, FsType.Absolute);
+		public IDirectory Root => new Directory(_info.Root, FsType.Absolute);
 
-		public FileAttributes Attributes => info.Attributes;
+		public FileAttributes Attributes => _info.Attributes;
 
-		public string Extension => info.Extension;
+		public string Extension => _info.Extension;
 
-		public DateTime CreationTime => info.CreationTime;
+		public DateTime CreationTime => _info.CreationTime;
 
-		public string FullName => info.FullName;
+		public string FullName => _info.FullName;
 
-		public DateTime CreationTimeUtc => info.CreationTimeUtc;
+		public DateTime CreationTimeUtc => _info.CreationTimeUtc;
 
-		public DateTime LastAccessTime => info.LastAccessTime;
+		public DateTime LastAccessTime => _info.LastAccessTime;
 
-		public DateTime LastWriteTime => info.LastWriteTime;
+		public DateTime LastWriteTime => _info.LastWriteTime;
 		
-		public DateTime LastAccessTimeUtc => info.LastAccessTimeUtc;
+		public DateTime LastAccessTimeUtc => _info.LastAccessTimeUtc;
 
-		public DateTime LastWriteTimeUtc => info.LastWriteTimeUtc;
+		public DateTime LastWriteTimeUtc => _info.LastWriteTimeUtc;
 
         public void Create()
 		{
-			info.Create();
+			_info.Create();
 		}
 
 		public IDirectory CreateSubDirectory(string name, bool createIt = true)
 		{
-			var directory = new Directory(info.CreateSubdirectory(name), Type);
+			var directory = new Directory(_info.CreateSubdirectory(name), Type);
 			if(createIt) directory.Create();
 			return directory;
 		}
@@ -82,21 +82,21 @@ namespace Hgm.Engine.IO
 		public void Delete(bool recursive = true)
 		{
 			if(Exists)
-				info.Delete(recursive);
+				_info.Delete(recursive);
 		}
 
 		public void DeleteContents()
 		{
 			if (Exists)
 			{
-				info.GetFiles().ToList().ForEach(e => e.Delete());
-				info.GetDirectories().ToList().ForEach(e => e.Delete(true));
+				_info.GetFiles().ToList().ForEach(e => e.Delete());
+				_info.GetDirectories().ToList().ForEach(e => e.Delete(true));
 			}
 		}
 
 		public void Refresh()
 		{
-			info.Refresh();
+			_info.Refresh();
 		}
 
 		public IFile FindFile(string fileName)
@@ -137,7 +137,7 @@ namespace Hgm.Engine.IO
 		{
 			filter ??= e => true;
 
-			var directoriesArray = info.GetDirectories();
+			var directoriesArray = _info.GetDirectories();
 			var directoriesList = new List<IDirectory>();
 			
 			foreach (var directory in directoriesArray)
@@ -151,13 +151,13 @@ namespace Hgm.Engine.IO
 
 		public IList<IFile> ListFiles()
 		{
-			var files = info.GetFiles();
+			var files = _info.GetFiles();
 			return files.Select(file => new File(file, Type)).ToList<IFile>();
 		}
 		
 		public IList<IFile> ListFilesRecursively(FileListFilter filter = null)
 		{
-			filter ??= file => true;
+			filter ??= _ => true;
 			List<IFile> files = new List<IFile>();
 			
 			InternalListFilesRecursively(filter, this, files);
@@ -180,13 +180,13 @@ namespace Hgm.Engine.IO
 
 		public IList<FileSystemInfo> ListFileSystems()
 		{
-			var systems = info.GetFileSystemInfos();
+			var systems = _info.GetFileSystemInfos();
 			return systems.ToList();
 		}
 
 		public void MoveTo(IDirectory dest)
 		{
-			info.MoveTo(dest.FullName);
+			_info.MoveTo(dest.FullName);
 		}
 
 		public void CopyTo(IDirectory dest)

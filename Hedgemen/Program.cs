@@ -8,9 +8,9 @@ namespace Hgm
 	{
 		private static void Main(string[] args)
 		{
-			Global.InitializeGlobal(new Hedgemen());
-			Global.GetHedgemen().Run();
-			Global.FinalizeGlobal();
+			Hedgemen.Proc = new HedgemenProc();
+			Hedgemen.Proc.Run();
+			Hedgemen.Finish();
 		}
 	}
 }

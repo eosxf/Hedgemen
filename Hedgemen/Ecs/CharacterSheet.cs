@@ -16,11 +16,10 @@ public class CharacterSheet : Part
 	public int Charisma { get; set; }
 	
 	public CharacterClass Class { get; set; }
-	
+
 	public CharacterSheet()
 	{
 		Class = new CharacterClass();
-		
 		RegisterEvent<GameChangeClassEvent>(ChangeClass);
 	}
 
@@ -29,8 +28,10 @@ public class CharacterSheet : Part
 		var oldClass = Class.ClassName;
 		Class.ClassName = e.ClassName;
 		Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
+		
+		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasPart<CharacterSheet>()}");
 	}
-	
+
 	public override ComponentInfo QueryComponentInfo()
 	{
 		return new ComponentInfo
@@ -43,7 +44,7 @@ public class CharacterSheet : Part
 
 	public override SerializedInfo GetSerializedInfo()
 	{
-		var fields = new SerializedFields
+		return new SerializedInfo(this, new SerializedFields
 		{
 			{"strength", Strength},
 			{"dexterity", Dexterity},
@@ -52,20 +53,17 @@ public class CharacterSheet : Part
 			{"wisdom", Wisdom},
 			{"charisma", Charisma},
 			{"class", Class.GetSerializedInfo()}
-		};
-
-		return new SerializedInfo(this, fields);
+		});
 	}
 
-	public override void ReadSerializedInfo(SerializedInfo info)
+	public override void InitializeFromFields(SerializedFields fields)
 	{
-		var fields = info.Fields;
-		Strength = fields.Get<int>("strength");
-		Dexterity = fields.Get<int>("dexterity");
-		Constitution = fields.Get<int>("constitution");
-		Intelligence = fields.Get<int>("intelligence");
-		Wisdom = fields.Get<int>("wisdom");
-		Charisma = fields.Get<int>("charisma");
+		Strength = fields.Get("strength", 10);
+		Dexterity = fields.Get("dexterity", 10);
+		Constitution = fields.Get("constitution", 10);
+		Intelligence = fields.Get("intelligence", 10);
+		Wisdom = fields.Get("wisdom", 10);
+		Charisma = fields.Get("charisma", 10);
 		Class = fields.Get("class").Instantiate<CharacterClass>();
 	}
 }
