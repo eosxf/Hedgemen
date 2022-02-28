@@ -1,10 +1,9 @@
-﻿namespace Hgm.Utilities
+﻿namespace Hgm.Utilities;
+
+public enum LogLevel
 {
-	public enum LogLevel
-	{
-		Debug,
-		Warn,
-		Error,
-		Critical
-	}
+	Debug,
+	Warn,
+	Error,
+	Critical
 }

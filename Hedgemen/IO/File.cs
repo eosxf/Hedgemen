@@ -2,180 +2,183 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Hgm.IO
+namespace Hgm.IO;
+
+public class File : IFile
 {
-	public class File : IFile
+	private readonly FileInfo _info;
+
+	private readonly string _evaluatedPath;
+
+	public File(string filePath, FsType fsType = FsType.Local)
 	{
-        private readonly FileInfo _info;
+		_evaluatedPath = EvaluatePath(filePath, fsType);
+		_info = new FileInfo(_evaluatedPath);
+		Type = fsType;
+	}
 
-        public FsType Type { get; private set; }
-        public FileAccess Access { get; set; } = FileAccess.ReadWrite;
-        public FileShare Share { get; set; } = FileShare.ReadWrite;
-        public Encoding Encoding { get; set; } = Encoding.UTF8;
+	internal File(FileInfo fileInfo, FsType fsType)
+	{
+		_evaluatedPath = EvaluatePath(fileInfo.FullName, fsType);
+		_info = new FileInfo(_evaluatedPath);
+		Type = fsType;
+	}
 
-        private string _evaluatedPath;
+	public FsType Type { get; }
+	public FileAccess Access { get; set; } = FileAccess.ReadWrite;
+	public FileShare Share { get; set; } = FileShare.ReadWrite;
+	public Encoding Encoding { get; set; } = Encoding.UTF8;
 
-        public File(string filePath, FsType fsType = FsType.Local)
-        {
-            _evaluatedPath = EvaluatePath(filePath, fsType);
-            _info = new FileInfo(_evaluatedPath);
-            Type = fsType;
-        }
+	public bool Exists => _info.Exists;
 
-        internal File(FileInfo fileInfo, FsType fsType)
-        {
-            _evaluatedPath = EvaluatePath(fileInfo.FullName, fsType);
-            _info = new FileInfo(this._evaluatedPath);
-            Type = fsType;
-        }
+	public IDirectory Directory => new Directory(_info.Directory, Type);
 
-        public bool Exists => _info.Exists;
+	public long Length => _info.Length;
 
-		public IDirectory Directory => new Directory(_info.Directory, Type);
+	public string Name => _info.Name;
 
-		public long Length => _info.Length;
+	public string DirectoryName => Directory.Name;
 
-		public string Name => _info.Name;
+	public bool IsReadOnly => _info.IsReadOnly;
 
-		public string DirectoryName => Directory.Name;
+	public FileAttributes Attributes => _info.Attributes;
 
-		public bool IsReadOnly => _info.IsReadOnly;
+	public string Extension => _info.Extension;
 
-		public FileAttributes Attributes => _info.Attributes;
+	public DateTime CreationTime => _info.CreationTime;
 
-		public string Extension => _info.Extension;
+	public string FullName => _info.FullName;
 
-		public DateTime CreationTime => _info.CreationTime;
+	public DateTime CreationTimeUtc => _info.CreationTimeUtc;
 
-		public string FullName => _info.FullName;
+	public DateTime LastAccessTime => _info.LastAccessTime;
 
-		public DateTime CreationTimeUtc => _info.CreationTimeUtc;
+	public DateTime LastWriteTime => _info.LastWriteTime;
 
-		public DateTime LastAccessTime => _info.LastAccessTime;
+	public DateTime LastAccessTimeUtc => _info.LastAccessTimeUtc;
 
-		public DateTime LastWriteTime => _info.LastWriteTime;
-		
-		public DateTime LastAccessTimeUtc => _info.LastAccessTimeUtc;
+	public DateTime LastWriteTimeUtc => _info.LastWriteTimeUtc;
 
-		public DateTime LastWriteTimeUtc => _info.LastWriteTimeUtc;
+	public void Create()
+	{
+		if (Exists) return;
+		Directory.Create();
+		_info.Create().Close();
+	}
 
-        protected virtual string EvaluatePath(string filePath, FsType fsType)
-        {
-            switch(fsType)
-            {
-                case FsType.Local:
-                    if(Path.IsPathRooted(filePath)) throw new Exception("File path: " + filePath + " is Absolute, but given the FsType of Local!");
-                    return filePath;
-                case FsType.Absolute:
-                    if(Path.IsPathRooted(filePath)) throw new Exception("File path: " + filePath + " is Relative or External, but given the FsType of Absolute!");
-                    return filePath;
-            }
+	public void Delete()
+	{
+		_info.Delete();
+	}
 
-            return string.Empty;
-        }
+	public virtual Stream Open(FileMode mode = FileMode.Open)
+	{
+		return _info.Open(mode, Access, Share);
+	}
 
-        public void Create()
+	public void WriteString(string text)
+	{
+		EnsureCreated();
+		using var writer = new StreamWriter(Open(FileMode.Truncate), Encoding);
+		writer.Write(text);
+		writer.Flush();
+	}
+
+	public void WriteBytes(byte[] buffer)
+	{
+		WriteBytes(buffer, 0, buffer.Length);
+	}
+
+	public void WriteBytes(byte[] buffer, int index, int count, FileMode fileMode = FileMode.Truncate)
+	{
+		EnsureCreated();
+		using var writer = new BinaryWriter(Open(fileMode), Encoding);
+		writer.Write(buffer, index, count);
+		writer.Flush();
+	}
+
+	public string ReadString(FileMode fileMode = FileMode.Open)
+	{
+		if (!Exists) return string.Empty;
+		using var reader = new StreamReader(Open(fileMode), Encoding);
+		return reader.ReadToEnd();
+	}
+
+	public byte[] ReadBytes(FileMode fileMode = FileMode.Open)
+	{
+		using var stream = Open(fileMode);
+		using var ms = new MemoryStream();
+
+		stream.CopyTo(ms);
+		return ms.ToArray();
+	}
+
+	public void CopyTo(IFile dest, bool overwrite = true)
+	{
+		dest.Directory.Create();
+		_info.CopyTo(dest.FullName, overwrite);
+	}
+
+	public void MoveTo(IFile dest, bool overwrite = true)
+	{
+		_info.MoveTo(dest.FullName, overwrite);
+	}
+
+	public IFile CopyTo(IDirectory dest, string name, bool overwrite = true)
+	{
+		var file = new File(dest.FullName + '/' + name, dest.Type);
+		CopyTo(file, overwrite);
+		return file;
+	}
+
+	public IFile MoveTo(IDirectory dest, string name, bool overwrite = true)
+	{
+		var file = new File(dest.FullName + '/' + name, dest.Type);
+		MoveTo(file, overwrite);
+		return file;
+	}
+
+	protected virtual string EvaluatePath(string filePath, FsType fsType)
+	{
+		switch (fsType)
 		{
-			if (Exists) return;
-			Directory.Create();
-			_info.Create().Close();
+			case FsType.Local:
+				if (Path.IsPathRooted(filePath))
+					throw new Exception("File path: " + filePath + " is Absolute, but given the FsType of Local!");
+				return filePath;
+			case FsType.Absolute:
+				if (Path.IsPathRooted(filePath))
+					throw new Exception("File path: " + filePath +
+					                    " is Relative or External, but given the FsType of Absolute!");
+				return filePath;
 		}
 
-		public void Delete()
-		{
-			_info.Delete();
-		}
-		
-		public virtual Stream Open(FileMode mode = FileMode.Open)
-		{
-			return _info.Open(mode, Access, Share);
-		}
+		return string.Empty;
+	}
 
-		public void WriteString(string text)
-		{
-			EnsureCreated();
-			using StreamWriter writer = new StreamWriter(Open(FileMode.Truncate), Encoding);
-			writer.Write(text);
-			writer.Flush();
-		}
-		
-		public void WriteBytes(byte[] buffer)
-		{
-			WriteBytes(buffer, 0, buffer.Length);
-		}
-		
-		public void WriteBytes(byte[] buffer, int index, int count, FileMode fileMode = FileMode.Truncate)
-		{
-			EnsureCreated();
-			using BinaryWriter writer = new BinaryWriter(Open(fileMode), Encoding);
-			writer.Write(buffer, index, count);
-			writer.Flush();
-		}
+	public override string ToString()
+	{
+		return FullName;
+	}
 
-		public string ReadString(FileMode fileMode = FileMode.Open)
-		{
-			if (!Exists) return string.Empty;
-			using StreamReader reader = new StreamReader(Open(fileMode), Encoding);
-			return reader.ReadToEnd();
-		}
-
-		public byte[] ReadBytes(FileMode fileMode = FileMode.Open)
-		{
-			using var stream = Open(fileMode);
-			using var ms = new MemoryStream();
-			
-			stream.CopyTo(ms);
-			return ms.ToArray();
-		}
-
-		public void CopyTo(IFile dest, bool overwrite = true)
-		{
-			dest.Directory.Create();
-			_info.CopyTo(dest.FullName, overwrite);
-		}
-
-		public void MoveTo(IFile dest, bool overwrite = true)
-		{
-			_info.MoveTo(dest.FullName, overwrite);
-		}
-		
-		public IFile CopyTo(IDirectory dest, string name, bool overwrite = true)
-		{
-			var file = new File(dest.FullName + '/' + name, dest.Type);
-			CopyTo(file, overwrite);
-			return file;
-		}
-
-		public IFile MoveTo(IDirectory dest, string name, bool overwrite = true)
-		{
-			var file = new File(dest.FullName + '/' + name, dest.Type);
-			MoveTo(file, overwrite);
-			return file;
-		}
-
-		public override string ToString()
-		{
-			return FullName;
-		}
-
-		public override bool Equals(object obj)
-		{
-			if (obj == null) return false;
-			var objVal = obj as IFile;
+	public override bool Equals(object obj)
+	{
+		if (obj is IFile objVal)
 			return Type == objVal.Type && FullName.Equals(objVal.FullName);
-		}
 
-		public override int GetHashCode()
-		{
-			int hash = 1;
-			hash = hash * 37 + _info.GetHashCode();
-			hash = hash * 67 + FullName.GetHashCode();
-			return hash;
-		}
+		return false;
+	}
 
-		private void EnsureCreated()
-		{
-			Create();
-		}
-    }
+	public override int GetHashCode()
+	{
+		var hash = 1;
+		hash = hash * 37 + _info.GetHashCode();
+		hash = hash * 67 + FullName.GetHashCode();
+		return hash;
+	}
+
+	private void EnsureCreated()
+	{
+		Create();
+	}
 }

@@ -1,12 +1,11 @@
-﻿namespace Hgm.IO
+﻿namespace Hgm.IO;
+
+public interface IFileSystem
 {
-	public interface IFileSystem
-	{
-		bool IsLocalStorageAvailable();
-		bool IsExternalStorageAvailable();
-		string GetLocalPath();
-		string GetExternalPath();
-		string GetAbsolutePath(string path);
-		string ConcatPath(params string[] paths);
-	}
+	bool IsLocalStorageAvailable();
+	bool IsExternalStorageAvailable();
+	string GetLocalPath();
+	string GetExternalPath();
+	string GetAbsolutePath(string path);
+	string ConcatPath(params string[] paths);
 }

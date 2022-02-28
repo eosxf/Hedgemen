@@ -9,13 +9,7 @@ namespace Hgm.Ecs.Text;
 
 public class EntitySchema
 {
-	private NamespacedString _registryName;
-	private NamespacedString _inherits;
 	private List<ComponentSchema> _components;
-
-	public NamespacedString RegistryName => _registryName;
-	public NamespacedString Inherits => _inherits;
-	public IReadOnlyList<ComponentSchema> Components => _components;
 
 	public EntitySchema(IFile schemaFile)
 	{
@@ -23,10 +17,16 @@ public class EntitySchema
 		Initialize(view);
 	}
 
+	public NamespacedString RegistryName { get; private set; }
+
+	public NamespacedString Inherits { get; private set; }
+
+	public IReadOnlyList<ComponentSchema> Components => _components;
+
 	private void Initialize(JsonView view)
 	{
-		_registryName = view.RegistryName;
-		_inherits = view.Inherits;
+		RegistryName = view.RegistryName;
+		Inherits = view.Inherits;
 
 		var componentsView = view.Components;
 		_components = new List<ComponentSchema>(componentsView.Count);
@@ -51,16 +51,13 @@ public class EntitySchema
 
 	public class JsonView
 	{
-		[JsonInclude]
-		[JsonPropertyName("registry_name")]
-		public string RegistryName = NamespacedString.Default;
+		[JsonInclude] [JsonPropertyName("components")]
+		public List<ComponentSchema.JsonView> Components;
 
-		[JsonInclude]
-		[JsonPropertyName("inherits")]
+		[JsonInclude] [JsonPropertyName("inherits")]
 		public string Inherits = string.Empty;
 
-		[JsonInclude]
-		[JsonPropertyName("components")]
-		public List<ComponentSchema.JsonView> Components;
+		[JsonInclude] [JsonPropertyName("registry_name")]
+		public string RegistryName = NamespacedString.Default;
 	}
 }

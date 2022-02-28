@@ -1,4 +1,9 @@
-﻿namespace Hgm.IO
+﻿namespace Hgm.IO;
+
+public enum FsType
 {
-	public enum FsType { Local, Absolute, External, Internal }
+	Local,
+	Absolute,
+	External,
+	Internal
 }

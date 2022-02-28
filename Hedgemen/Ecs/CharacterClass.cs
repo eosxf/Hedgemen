@@ -5,7 +5,11 @@ namespace Hgm.Ecs;
 public class CharacterClass : IGameEventHandler, ISerializableInfo
 {
 	public string ClassName { get; set; } = "nothing";
-	
+
+	public void Propagate(GameEvent gameEvent)
+	{
+	}
+
 	public SerializedInfo GetSerializedInfo()
 	{
 		var fields = new SerializedFields
@@ -19,10 +23,5 @@ public class CharacterClass : IGameEventHandler, ISerializableInfo
 	public void ReadSerializedInfo(SerializedInfo info)
 	{
 		ClassName = info.Fields.Get<string>("class_name");
-	}
-
-	public void Propagate(GameEvent gameEvent)
-	{
-		
 	}
 }

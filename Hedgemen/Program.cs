@@ -1,16 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
+﻿namespace Hgm;
 
-namespace Hgm
+public static class Program
 {
-	public static class Program
+	private static void Main(string[] args)
 	{
-		private static void Main(string[] args)
-		{
-			Hedgemen.Proc = new HedgemenProc();
-			Hedgemen.Proc.Run();
-			Hedgemen.Finish();
-		}
+		Hedgemen.Proc = new HedgemenProc();
+		Hedgemen.Proc.Run();
+		Hedgemen.Finish();
 	}
 }

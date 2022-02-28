@@ -6,58 +6,38 @@ using Hgm.Utilities;
 
 namespace Hgm.Ecs;
 
-public delegate void PartEvent(GameEvent e);
+public delegate void PartEventWrapper(GameEvent e);
+
+public delegate void PartEvent<in TEvent>(TEvent e) where TEvent : GameEvent;
 
 public class Entity : IEntity
 {
-	private IDictionary<Type, Part> _parts = new CachedDictionary<Type, Part>();
-
-	public void AddPart(Part part)
-	{
-		var infoQuery = part.QueryComponentInfo();
-
-		if (_parts.ContainsKey(infoQuery.AccessType))
-			throw new ArgumentException($"{GetType().Name} already has a {nameof(Part)} with an AccessType of " +
-						                    $"{infoQuery.AccessType.FullName}");
-		part.AttachEntity(this);
-		_parts.Add(infoQuery.AccessType, part);
-	}
-
-	public T GetPart<T>() where T : class
-	{
-		_parts.TryGetValue(typeof(T), out var part);
-		return part as T;
-	}
+	private readonly IDictionary<Type, Part> _parts = new CachedDictionary<Type, Part>();
 
 	public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
 	{
-		foreach(var part in _parts.Values)
+		foreach (var part in _parts.Values)
 		{
 			if (!part.IsActive) continue;
-			
+
 			var info = part.QueryComponentInfo();
 
 			if (!e.IsProperlyInitialized())
 				throw new InvalidOperationException($"Event: {e} is not properly initialized.");
-			
+
 			if (part.IsEventRegistered<TEvent>())
 			{
-				bool result = part.HandleEvent(e);
+				var result = part.HandleEvent(e);
 				if (result) e.Handled = true;
 			}
-			
+
 			else if (info.PropagatesIgnoredEvents)
 			{
 				part.OnEventPropagated(e);
 			}
 		}
-		
-		return e;
-	}
 
-	public bool HasPart<T>() where T : class
-	{
-		return _parts.ContainsKey(typeof(T));
+		return e;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -74,11 +54,9 @@ public class Entity : IEntity
 
 	public bool WillRespondTo(Type eventType)
 	{
-		foreach(var part in _parts.Values)
-		{
-			if(part.IsEventRegistered(eventType))
+		foreach (var part in _parts.Values)
+			if (part.IsEventRegistered(eventType))
 				return true;
-		}
 
 		return false;
 	}
@@ -86,11 +64,9 @@ public class Entity : IEntity
 	public SerializedInfo GetSerializedInfo()
 	{
 		var fields = new SerializedFields();
-		
+
 		foreach (var part in _parts.Values)
-		{
 			fields.Add(part.QueryComponentInfo().RegistryName, part.GetSerializedInfo());
-		}
 
 		return new SerializedInfo(this, fields);
 	}
@@ -103,5 +79,27 @@ public class Entity : IEntity
 			var part = partSerializedInfo.Instantiate<Part>(Hedgemen.RegisteredAssemblies);
 			AddPart(part);
 		}
+	}
+
+	public void AddPart(Part part)
+	{
+		var infoQuery = part.QueryComponentInfo();
+
+		if (_parts.ContainsKey(infoQuery.AccessType))
+			throw new ArgumentException($"{GetType().Name} already has a {nameof(Part)} with an AccessType of " +
+			                            $"{infoQuery.AccessType.FullName}");
+		part.AttachEntity(this);
+		_parts.Add(infoQuery.AccessType, part);
+	}
+
+	public T GetPart<T>() where T : class
+	{
+		_parts.TryGetValue(typeof(T), out var part);
+		return part as T;
+	}
+
+	public bool HasPart<T>() where T : class
+	{
+		return _parts.ContainsKey(typeof(T));
 	}
 }

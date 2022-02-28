@@ -1,11 +1,11 @@
 {
-	"registry_name": "hedgemen:foodstuff",
-	"parts": [
-		{
-			"registry_name": "hedgemen:food",
-			"fields": {
-				"healing_amount": 1
-			}
-		}
-	]
+  "registry_name": "hedgemen:foodstuff",
+  "parts": [
+    {
+      "registry_name": "hedgemen:food",
+      "fields": {
+        "healing_amount": 1
+      }
+    }
+  ]
 }

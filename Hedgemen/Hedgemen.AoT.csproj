@@ -1,59 +1,59 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<DefineConstants>XNA_IMPLEMENTATION_FNA</DefineConstants>
-		<RootNamespace>Hgm</RootNamespace>
-		<AssemblyName>Hedgemen</AssemblyName>
-		<Platforms>AnyCPU</Platforms>
-		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
-		<Nullable>disable</Nullable>
-		<RunWorkingDirectory>../Build.AoT/</RunWorkingDirectory>
-		<OutputPath>../Build.AoT</OutputPath>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <DefineConstants>XNA_IMPLEMENTATION_FNA</DefineConstants>
+        <RootNamespace>Hgm</RootNamespace>
+        <AssemblyName>Hedgemen</AssemblyName>
+        <Platforms>AnyCPU</Platforms>
+        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+        <Nullable>disable</Nullable>
+        <RunWorkingDirectory>../Build.AoT/</RunWorkingDirectory>
+        <OutputPath>../Build.AoT</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 
-		<InvariantGlobalization>false</InvariantGlobalization>
-		<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
-		<IlcGenerateStackTraceData>true</IlcGenerateStackTraceData>
-		<IlcTrimMetadata>false</IlcTrimMetadata>
-		<IlcDisableReflection>false</IlcDisableReflection>
-		<IlcOptimizationPreference>Speed</IlcOptimizationPreference>
-		<IlcFoldIdenticalMethodBodies>false</IlcFoldIdenticalMethodBodies>
-	</PropertyGroup>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+        <IlcGenerateStackTraceData>true</IlcGenerateStackTraceData>
+        <IlcTrimMetadata>false</IlcTrimMetadata>
+        <IlcDisableReflection>false</IlcDisableReflection>
+        <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+        <IlcFoldIdenticalMethodBodies>false</IlcFoldIdenticalMethodBodies>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<RdXmlFile Include="rd.xml" />
-	</ItemGroup>
+    <ItemGroup>
+        <RdXmlFile Include="rd.xml"/>
+    </ItemGroup>
 
-	<Choose>
-	  <When Condition=" '$(Configuration)'=='Debug' ">
-		<PropertyGroup>
-		  <OutputType>exe</OutputType>
-		</PropertyGroup>
-	  </When>
-	  <When Condition=" '$(Configuration)'=='Release' ">
-		  <PropertyGroup>
-			<OutputType>winexe</OutputType>
-		  </PropertyGroup>
-	  </When>
-	</Choose>
-	
-	<ItemGroup>
-		<Reference Include="FNA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<HintPath>..\lib\FNA\FNA.dll</HintPath>
-		</Reference>
-	</ItemGroup>
+    <Choose>
+        <When Condition=" '$(Configuration)'=='Debug' ">
+            <PropertyGroup>
+                <OutputType>exe</OutputType>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(Configuration)'=='Release' ">
+            <PropertyGroup>
+                <OutputType>winexe</OutputType>
+            </PropertyGroup>
+        </When>
+    </Choose>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-alpha.1.21423.2" />
-	</ItemGroup>
+    <ItemGroup>
+        <Reference Include="FNA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\lib\FNA\FNA.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 
-	<ItemGroup>
-	<ContentWithTargetPath Include="../res/**">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
-	</ContentWithTargetPath>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0-alpha.1.21423.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ContentWithTargetPath Include="../res/**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+        </ContentWithTargetPath>
+    </ItemGroup>
 
 </Project>

@@ -1,59 +1,59 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
-		<DefineConstants>XNA_IMPLEMENTATION_FNA</DefineConstants>
-		<RootNamespace>Hgm</RootNamespace>
-		<AssemblyName>Hedgemen</AssemblyName>
-		<Platforms>AnyCPU</Platforms>
-		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
-		<Nullable>disable</Nullable>
-		<RunWorkingDirectory>../Build/</RunWorkingDirectory>
-		<OutputPath>../Build</OutputPath>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <DefineConstants>XNA_IMPLEMENTATION_FNA</DefineConstants>
+        <RootNamespace>Hgm</RootNamespace>
+        <AssemblyName>Hedgemen</AssemblyName>
+        <Platforms>AnyCPU</Platforms>
+        <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+        <Nullable>disable</Nullable>
+        <RunWorkingDirectory>../Build/</RunWorkingDirectory>
+        <OutputPath>../Build</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
 
-	<Choose>
-	  <When Condition=" '$(Configuration)'=='Debug' ">
-		<PropertyGroup>
-		  <OutputType>exe</OutputType>
-		</PropertyGroup>
-	  </When>
-	  <When Condition=" '$(Configuration)'=='Release' ">
-		  <PropertyGroup>
-			<OutputType>winexe</OutputType>
-		  </PropertyGroup>
-	  </When>
-	</Choose>
+    <Choose>
+        <When Condition=" '$(Configuration)'=='Debug' ">
+            <PropertyGroup>
+                <OutputType>exe</OutputType>
+            </PropertyGroup>
+        </When>
+        <When Condition=" '$(Configuration)'=='Release' ">
+            <PropertyGroup>
+                <OutputType>winexe</OutputType>
+            </PropertyGroup>
+        </When>
+    </Choose>
 
-	<!--<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-	</ItemGroup>-->
-	
-	<ItemGroup>
-		<Reference Include="FNA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-			<HintPath>..\lib\FNA\FNA.dll</HintPath>
-		</Reference>
-	</ItemGroup>
+    <!--<ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    </ItemGroup>-->
 
-	<ItemGroup>
-	<ContentWithTargetPath Include="../res/**">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
-	</ContentWithTargetPath>
-	<ContentWithTargetPath Update="..\res\player.json">
-	  <Link>res\player.json</Link>
-	</ContentWithTargetPath>
-	</ItemGroup>
+    <ItemGroup>
+        <Reference Include="FNA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\lib\FNA\FNA.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 
-	<ItemGroup>
-	  <Content Include="Hedgemen.AoT.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ContentWithTargetPath Include="../res/**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Update="..\res\player.json">
+            <Link>res\player.json</Link>
+        </ContentWithTargetPath>
+    </ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Base" />
-	  <Folder Include="Ecs\Systems" />
-	</ItemGroup>
+    <ItemGroup>
+        <Content Include="Hedgemen.AoT.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Base" />
+        <Folder Include="Ecs\Systems" />
+    </ItemGroup>
 
 </Project>

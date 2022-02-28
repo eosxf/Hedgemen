@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Hgm.Register;
 
-namespace Hgm.Register
+public sealed class ObjectRegistry
 {
-    public sealed class ObjectRegistry
-    {
-        
-    }
 }

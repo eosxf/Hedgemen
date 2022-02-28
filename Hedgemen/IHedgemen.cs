@@ -1,10 +1,9 @@
 using System;
 
-namespace Hgm
+namespace Hgm;
+
+public interface IHedgemen : IDisposable
 {
-	public interface IHedgemen : IDisposable
-	{
-		public void Run();
-		public void Exit();
-	}
+	public void Run();
+	public void Exit();
 }

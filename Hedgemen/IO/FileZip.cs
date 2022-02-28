@@ -2,61 +2,60 @@ using System;
 using System.IO;
 using System.IO.Compression;
 
-namespace Hgm.IO
+namespace Hgm.IO;
+
+public class FileZip : File, IDisposable
 {
-    public class FileZip : File, IDisposable
-    {
-        private ZipArchive _archive;
-        private bool _disposed = false;
+	private readonly ZipArchive _archive;
+	private bool _disposed;
 
-        public FileZip(string zipPath, FsType fsType = FsType.Local) : base(zipPath, fsType)
-        {
-            IFile file = new File(zipPath);
-            if(!file.Exists)
-                ZipFile.CreateFromDirectory(file.Directory.FullName, file.Name);
-            _archive = new ZipArchive(Open(), ZipArchiveMode.Update, false);
-        }
+	public FileZip(string zipPath, FsType fsType = FsType.Local) : base(zipPath, fsType)
+	{
+		IFile file = new File(zipPath);
+		if (!file.Exists)
+			ZipFile.CreateFromDirectory(file.Directory.FullName, file.Name);
+		_archive = new ZipArchive(Open(), ZipArchiveMode.Update, false);
+	}
 
-        ~FileZip()
-        {
-            Dispose();
-        }
+	public void Dispose()
+	{
+		if (_disposed) return;
+		_archive.Dispose();
+		_disposed = true;
+	}
 
-        public Stream Open(string filePath, FileMode mode = FileMode.Open)
-        {
-            if(filePath == string.Empty)
-                return base.Open(mode);
-            
-            var entry = _archive.GetEntry(filePath);
-            return entry?.Open();
-        }
+	~FileZip()
+	{
+		Dispose();
+	}
 
-        internal ZipArchiveEntry GetEntryUnwrapped(string filePath)
-        {
-            return _archive.GetEntry(filePath);
-        }
+	public Stream Open(string filePath, FileMode mode = FileMode.Open)
+	{
+		if (filePath == string.Empty)
+			return base.Open(mode);
 
-        // todo remove eventually
-        public ZipArchiveEntry CreateEntryUnwrapped(string filePath)
-        {
-            return _archive.CreateEntry(filePath);
-        }
+		var entry = _archive.GetEntry(filePath);
+		return entry?.Open();
+	}
 
-        public FileZipEntry GetEntry(string filePath)
-        {
-            return new FileZipEntry(filePath, this);
-        }
+	internal ZipArchiveEntry GetEntryUnwrapped(string filePath)
+	{
+		return _archive.GetEntry(filePath);
+	}
 
-        public bool EntryExists(string filePath)
-        {
-            return _archive.GetEntry(filePath) != null;
-        }
+	// todo remove eventually
+	public ZipArchiveEntry CreateEntryUnwrapped(string filePath)
+	{
+		return _archive.CreateEntry(filePath);
+	}
 
-        public void Dispose()
-        {
-            if(_disposed) return;
-            _archive.Dispose();
-            _disposed = true;
-        }
-    }
+	public FileZipEntry GetEntry(string filePath)
+	{
+		return new FileZipEntry(filePath, this);
+	}
+
+	public bool EntryExists(string filePath)
+	{
+		return _archive.GetEntry(filePath) != null;
+	}
 }

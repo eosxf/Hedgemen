@@ -1,12 +1,11 @@
 {
 	"registry_name": "hedgemen:sentient_apple_pie",
 	"inherits": "hedgemen:sentient_food",
-	"components": 
-	[
+	"components": [
 		{
 			"registry_name": "hedgemen:food",
 			"fields": {
-				"healing_amount": 1025
+			"healing_amount": 1025
 			}
 		}
 	]

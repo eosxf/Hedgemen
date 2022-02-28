@@ -6,13 +6,11 @@ namespace Hgm.Ecs.Text;
 
 public class ComponentSchema
 {
-	[JsonInclude]
-	[JsonPropertyName("registry_name")]
-	public string RegistryName;
-
-	[JsonInclude]
-	[JsonPropertyName("fields")]
+	[JsonInclude] [JsonPropertyName("fields")]
 	public SerializedFields Fields;
+
+	[JsonInclude] [JsonPropertyName("registry_name")]
+	public string RegistryName;
 
 	public ComponentSchema(JsonView view)
 	{
@@ -27,12 +25,10 @@ public class ComponentSchema
 
 	public class JsonView
 	{
-		[JsonInclude]
-		[JsonPropertyName("registry_name")]
-		public string RegistryName = NamespacedString.Default;
-
-		[JsonInclude]
-		[JsonPropertyName("fields")]
+		[JsonInclude] [JsonPropertyName("fields")]
 		public SerializedFields Fields = new();
+
+		[JsonInclude] [JsonPropertyName("registry_name")]
+		public string RegistryName = NamespacedString.Default;
 	}
 }

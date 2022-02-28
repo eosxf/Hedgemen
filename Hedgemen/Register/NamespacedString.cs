@@ -1,76 +1,84 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace Hgm.Register
+namespace Hgm.Register;
+
+public struct NamespacedString
 {
-    public struct NamespacedString
-    {
-        public static string DefaultNamespace => "any";
-        public static string DefaultName => "null";
+	public static string DefaultNamespace => "any";
+	public static string DefaultName => "null";
 
-        public static NamespacedString Default => new (DefaultNamespace, DefaultName);
-        
-        private string nameSpace;
-        private string name;
+	public static NamespacedString Default => new(DefaultNamespace, DefaultName);
 
-        [JsonConstructor]
-        public NamespacedString(string fullyQualifiedString)
-        {
-            string[] fullyQualifiedStringSplit = fullyQualifiedString.Split(':');
-            
-            if(!IsValidQualifiedString(fullyQualifiedString))
-                throw new ArgumentException($"String {fullyQualifiedString} is not a valid namespaced string!");
+	private string nameSpace;
+	private string name;
 
-            nameSpace = fullyQualifiedStringSplit[0];
-            name = fullyQualifiedStringSplit[1];
-        }
+	[JsonConstructor]
+	public NamespacedString(string fullyQualifiedString)
+	{
+		var fullyQualifiedStringSplit = fullyQualifiedString.Split(':');
 
-        public NamespacedString(string nameSpace, string name)
-        {
-            this.nameSpace = nameSpace;
-            this.name = name;
-        }
+		if (!IsValidQualifiedString(fullyQualifiedString))
+			throw new ArgumentException($"String {fullyQualifiedString} is not a valid namespaced string!");
 
-        [JsonIgnore]
-        public string Namespace
-        {
-            get
-            {
-                nameSpace ??= DefaultNamespace;
-                return nameSpace;
-            }
+		nameSpace = fullyQualifiedStringSplit[0];
+		name = fullyQualifiedStringSplit[1];
+	}
 
-            set => nameSpace = value;
-        }
+	public NamespacedString(string nameSpace, string name)
+	{
+		this.nameSpace = nameSpace;
+		this.name = name;
+	}
 
-        [JsonIgnore]
-        public string Name
-        {
-            get
-            {
-                name ??= DefaultName;
-                return name;
-            }
+	[JsonIgnore]
+	public string Namespace
+	{
+		get
+		{
+			nameSpace ??= DefaultNamespace;
+			return nameSpace;
+		}
 
-            set => name = value;
-        }
+		set => nameSpace = value;
+	}
 
-        [JsonPropertyName("name")]
-        public string FullName => nameSpace + ':' + name;
-        
-        private static bool IsValidQualifiedString(string fullyQualifiedString)
-        {
-            string[] fullyQualifiedStringSplit = fullyQualifiedString.Split(':');
+	[JsonIgnore]
+	public string Name
+	{
+		get
+		{
+			name ??= DefaultName;
+			return name;
+		}
 
-            bool correctNumberOfSplits = fullyQualifiedStringSplit.Length == 2;
-            bool noSpaces = !fullyQualifiedString.Contains(' ');
+		set => name = value;
+	}
 
-            return correctNumberOfSplits && noSpaces;
-        }
+	[JsonPropertyName("name")] public string FullName => nameSpace + ':' + name;
 
-        public override string ToString() => FullName;
+	private static bool IsValidQualifiedString(string fullyQualifiedString)
+	{
+		var fullyQualifiedStringSplit = fullyQualifiedString.Split(':');
 
-        public static implicit operator NamespacedString(string val) => new NamespacedString(val);
-        public static implicit operator string(NamespacedString val) => val.FullName;
-    }
+		var correctNumberOfSplits = fullyQualifiedStringSplit.Length == 2;
+		var noSpaces = !fullyQualifiedString.Contains(' ');
+
+		return correctNumberOfSplits && noSpaces;
+	}
+
+	public override string ToString()
+	{
+		return FullName;
+	}
+
+	public static implicit operator NamespacedString(string val)
+	{
+		return new(val);
+	}
+
+	public static implicit operator string(NamespacedString val)
+	{
+		return val.FullName;
+	}
 }

@@ -1,10 +1,10 @@
 ﻿<Directives>
     <Application>
-        <Assembly Name="mscorlib" Dynamic="Required All" />
-        <Assembly Name="System" Dynamic="Required All" />
-        <Assembly Name="System.Text.Json" Dynamic="Required All" />
-        <Assembly Name="System.Runtime.Serialization" Dynamic="Required All" />
-        <Assembly Name="System.Runtime.Serialization.Formatters" Dynamic="Required All" />
+        <Assembly Name="mscorlib" Dynamic="Required All"/>
+        <Assembly Name="System" Dynamic="Required All"/>
+        <Assembly Name="System.Text.Json" Dynamic="Required All"/>
+        <Assembly Name="System.Runtime.Serialization" Dynamic="Required All"/>
+        <Assembly Name="System.Runtime.Serialization.Formatters" Dynamic="Required All"/>
         <!--<Assembly Name="System.Text.Json.Serialization" Dynamic="Required All" />-->
         <!--<Assembly Name="System.Text.Json.Converters" Serialize="Required All" />-->
     </Application>

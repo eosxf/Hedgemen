@@ -8,27 +8,27 @@ namespace Hgm.Ecs;
 /// </summary>
 public class CharacterSheet : Part
 {
+	public CharacterSheet()
+	{
+		Class = new CharacterClass();
+		RegisterEvent<ChangeClassEvent>(ChangeClass);
+	}
+
 	public int Strength { get; set; }
 	public int Dexterity { get; set; }
 	public int Constitution { get; set; }
 	public int Intelligence { get; set; }
 	public int Wisdom { get; set; }
 	public int Charisma { get; set; }
-	
+
 	public CharacterClass Class { get; set; }
 
-	public CharacterSheet()
-	{
-		Class = new CharacterClass();
-		RegisterEvent<GameChangeClassEvent>(ChangeClass);
-	}
-
-	public void ChangeClass(GameChangeClassEvent e)
+	public void ChangeClass(ChangeClassEvent e)
 	{
 		var oldClass = Class.ClassName;
 		Class.ClassName = e.ClassName;
 		Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
-		
+
 		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasPart<CharacterSheet>()}");
 	}
 

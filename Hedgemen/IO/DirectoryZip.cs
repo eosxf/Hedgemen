@@ -1,7 +1,5 @@
-namespace Hgm.IO
+namespace Hgm.IO;
+
+public class DirectoryZip
 {
-    public class DirectoryZip
-    {
-        
-    }
 }
