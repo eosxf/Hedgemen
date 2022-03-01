@@ -12,7 +12,8 @@ public static class Hedgemen
 
 	public static void RegisterAssembly(Type type)
 	{
-		RegisteredAssemblies.Add(type.Assembly.FullName, type.Assembly);
+		//RegisteredAssemblies.Add(type.Assembly.FullName, type.Assembly);
+		RegisteredAssemblies.Add(type.Assembly.GetName().Name, type.Assembly);
 	}
 
 	public static bool IsProperlyInitialized()

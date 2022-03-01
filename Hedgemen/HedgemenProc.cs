@@ -26,7 +26,7 @@ public sealed class HedgemenProc : Game, IHedgemen
 	protected override void Initialize()
 	{
 		Hedgemen.RegisterAssembly(typeof(HedgemenProc));
-		//TestEcs();
+		TestEcs();
 		TestSchema();
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
 	}

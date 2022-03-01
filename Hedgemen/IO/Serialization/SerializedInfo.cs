@@ -16,7 +16,8 @@ public class SerializedInfo
 	public SerializedInfo(ISerializableInfo obj, SerializedFields fields)
 	{
 		if (obj is null) throw new ArgumentNullException();
-		_assemblyName = obj.GetType().Assembly.FullName;
+		//_assemblyName = obj.GetType().Assembly.FullName;
+		_assemblyName = obj.GetType().Assembly.GetName().Name;
 		_typeName = obj.GetType().FullName;
 		_fields = fields;
 	}

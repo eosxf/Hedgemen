@@ -1,0 +1,3 @@
+More stars = more priority ** < ***.
+
+[x]* 2022/02/28 Save file data should not have version specific assemblies in case of updates in versions breaking save files.
