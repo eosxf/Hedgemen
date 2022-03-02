@@ -1,6 +1,6 @@
 {
   "registry_name": "hedgemen:foodstuff",
-  "parts": [
+  "components": [
     {
       "registry_name": "hedgemen:food",
       "fields": {

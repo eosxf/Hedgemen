@@ -9,9 +9,8 @@ public interface IEntity : ISerializableInfo
 	/// Handles a current Event if able to.
 	/// </summary>
 	/// <param name="e">
-	/// Event for the entity to handle. Event contains a Handled field that is true if any Part handles the event. Should
-	/// not be
-	/// tweaked manually.
+	/// Event for the entity to handle. Event contains a Handled field that is true if any Component
+	/// handles the event. Should not be tweaked manually.
 	/// </param>
 	/// <typeparam name="TEvent">Event Type to handle.</typeparam>
 	/// <returns></returns>
@@ -37,4 +36,9 @@ public interface IEntity : ISerializableInfo
 	/// <param name="eventType">Event type to be queried.</param>
 	/// <returns></returns>
 	public bool WillRespondTo(Type eventType);
+
+	// todo document these
+	public void AddComponent(Component component);
+	public T GetComponent<T>() where T : class;
+	public bool HasComponent<T>() where T : class;
 }

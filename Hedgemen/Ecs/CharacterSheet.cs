@@ -6,7 +6,7 @@ namespace Hgm.Ecs;
 /// <summary>
 /// Debug class, not meant for actual game
 /// </summary>
-public class CharacterSheet : Part
+public class CharacterSheet : Component
 {
 	public CharacterSheet()
 	{
@@ -29,7 +29,7 @@ public class CharacterSheet : Part
 		Class.ClassName = e.ClassName;
 		Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
 
-		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasPart<CharacterSheet>()}");
+		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasComponent<CharacterSheet>()}");
 	}
 
 	public override ComponentInfo QueryComponentInfo()

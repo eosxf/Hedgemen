@@ -44,12 +44,12 @@ public sealed class HedgemenProc : Game, IHedgemen
 	private void TestEcs()
 	{
 		var entity = new Entity();
-		entity.AddPart(new CharacterSheet
+		entity.AddComponent(new CharacterSheet
 		{
 			Class = new CharacterClassWarrior()
 		});
 
-		var sheet = entity.GetPart<CharacterSheet>();
+		var sheet = entity.GetComponent<CharacterSheet>();
 		sheet.Strength = 1025;
 		sheet.Intelligence = 10;
 		sheet.Charisma = 15;
@@ -87,10 +87,10 @@ public sealed class HedgemenProc : Game, IHedgemen
 		var entity2Info = JsonSerializer.Deserialize<SerializedInfo>(file.Open(), options)!;
 
 		var entity2 = entity2Info.Instantiate<Entity>();
-		Console.WriteLine(entity.GetPart<CharacterSheet>());
-		Console.WriteLine(entity2.GetPart<CharacterSheet>().Intelligence);
+		Console.WriteLine(entity.GetComponent<CharacterSheet>());
+		Console.WriteLine(entity2.GetComponent<CharacterSheet>().Intelligence);
 
-		Console.WriteLine($"obj2 class_name: {entity2.GetPart<CharacterSheet>().Class.ClassName}");
+		Console.WriteLine($"obj2 class_name: {entity2.GetComponent<CharacterSheet>().Class.ClassName}");
 	}
 
 	protected override void Update(GameTime gameTime)

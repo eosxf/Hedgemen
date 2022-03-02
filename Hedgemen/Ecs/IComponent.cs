@@ -14,7 +14,7 @@ public interface IComponent : ISerializableInfo
 	public void InitializeFromSchema(ComponentSchema schema);
 	public void InitializeFromFields(SerializedFields fields);
 	public bool HandleEvent(GameEvent e);
-	public void RegisterEvent<TEvent>(PartEvent<TEvent> e) where TEvent : GameEvent;
+	public void RegisterEvent<TEvent>(ComponentEvent<TEvent> e) where TEvent : GameEvent;
 	public bool IsEventRegistered<TEvent>() where TEvent : GameEvent;
 	public bool IsEventRegistered(Type eventType);
 	public ComponentInfo QueryComponentInfo();

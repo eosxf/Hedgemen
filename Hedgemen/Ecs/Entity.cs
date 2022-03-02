@@ -6,34 +6,34 @@ using Hgm.Utilities;
 
 namespace Hgm.Ecs;
 
-public delegate void PartEventWrapper(GameEvent e);
+public delegate void ComponentEventWrapper(GameEvent e);
 
-public delegate void PartEvent<in TEvent>(TEvent e) where TEvent : GameEvent;
+public delegate void ComponentEvent<in TEvent>(TEvent e) where TEvent : GameEvent;
 
 public class Entity : IEntity
 {
-	private readonly IDictionary<Type, Part> _parts = new CachedDictionary<Type, Part>();
+	private readonly IDictionary<Type, Component> _components = new CachedDictionary<Type, Component>();
 
 	public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
 	{
-		foreach (var part in _parts.Values)
+		foreach (var component in _components.Values)
 		{
-			if (!part.IsActive) continue;
+			if (!component.IsActive) continue;
 
-			var info = part.QueryComponentInfo();
+			var info = component.QueryComponentInfo();
 
 			if (!e.IsProperlyInitialized())
 				throw new InvalidOperationException($"Event: {e} is not properly initialized.");
 
-			if (part.IsEventRegistered<TEvent>())
+			if (component.IsEventRegistered<TEvent>())
 			{
-				var result = part.HandleEvent(e);
+				var result = component.HandleEvent(e);
 				if (result) e.Handled = true;
 			}
 
 			else if (info.PropagatesIgnoredEvents)
 			{
-				part.OnEventPropagated(e);
+				component.OnEventPropagated(e);
 			}
 		}
 
@@ -54,8 +54,8 @@ public class Entity : IEntity
 
 	public bool WillRespondTo(Type eventType)
 	{
-		foreach (var part in _parts.Values)
-			if (part.IsEventRegistered(eventType))
+		foreach (var component in _components.Values)
+			if (component.IsEventRegistered(eventType))
 				return true;
 
 		return false;
@@ -65,41 +65,41 @@ public class Entity : IEntity
 	{
 		var fields = new SerializedFields();
 
-		foreach (var part in _parts.Values)
-			fields.Add(part.QueryComponentInfo().RegistryName, part.GetSerializedInfo());
+		foreach (var component in _components.Values)
+			fields.Add(component.QueryComponentInfo().RegistryName, component.GetSerializedInfo());
 
 		return new SerializedInfo(this, fields);
 	}
 
 	public void ReadSerializedInfo(SerializedInfo info)
 	{
-		foreach (var partName in info.Fields)
+		foreach (var componentName in info.Fields)
 		{
-			var partSerializedInfo = info.Fields.Get<SerializedInfo>(partName.Key);
-			var part = partSerializedInfo.Instantiate<Part>(Hedgemen.RegisteredAssemblies);
-			AddPart(part);
+			var componentSerializedInfo = info.Fields.Get<SerializedInfo>(componentName.Key);
+			var component = componentSerializedInfo.Instantiate<Component>(Hedgemen.RegisteredAssemblies);
+			AddComponent(component);
 		}
 	}
 
-	public void AddPart(Part part)
+	public void AddComponent(Component component)
 	{
-		var infoQuery = part.QueryComponentInfo();
+		var infoQuery = component.QueryComponentInfo();
 
-		if (_parts.ContainsKey(infoQuery.AccessType))
-			throw new ArgumentException($"{GetType().Name} already has a {nameof(Part)} with an AccessType of " +
+		if (_components.ContainsKey(infoQuery.AccessType))
+			throw new ArgumentException($"{GetType().Name} already has a {nameof(Component)} with an AccessType of " +
 			                            $"{infoQuery.AccessType.FullName}");
-		part.AttachEntity(this);
-		_parts.Add(infoQuery.AccessType, part);
+		component.AttachEntity(this);
+		_components.Add(infoQuery.AccessType, component);
 	}
 
-	public T GetPart<T>() where T : class
+	public T GetComponent<T>() where T : class
 	{
-		_parts.TryGetValue(typeof(T), out var part);
-		return part as T;
+		_components.TryGetValue(typeof(T), out var component);
+		return component as T;
 	}
 
-	public bool HasPart<T>() where T : class
+	public bool HasComponent<T>() where T : class
 	{
-		return _parts.ContainsKey(typeof(T));
+		return _components.ContainsKey(typeof(T));
 	}
 }

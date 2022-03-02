@@ -8,9 +8,9 @@ namespace Hgm.Ecs;
 /// <summary>
 /// Component class for <see cref="Hgm.Ecs.Entity" />
 /// </summary>
-public abstract class Part : IComponent
+public abstract class Component : IComponent
 {
-	private readonly IDictionary<Type, PartEventWrapper> registeredEvents = new Dictionary<Type, PartEventWrapper>();
+	private readonly IDictionary<Type, ComponentEventWrapper> registeredEvents = new Dictionary<Type, ComponentEventWrapper>();
 	public Entity Self { get; private set; }
 
 	public virtual void InitializeFromSchema(ComponentSchema schema)
@@ -32,7 +32,7 @@ public abstract class Part : IComponent
 		return true;
 	}
 
-	public void RegisterEvent<TEvent>(PartEvent<TEvent> e) where TEvent : GameEvent
+	public void RegisterEvent<TEvent>(ComponentEvent<TEvent> e) where TEvent : GameEvent
 	{
 		if (e == null)
 			throw new Exception("Registered events cannot be null!");
@@ -40,12 +40,12 @@ public abstract class Part : IComponent
 		if (registeredEvents.ContainsKey(typeof(TEvent)))
 			throw new Exception($"Event type {typeof(TEvent).FullName} already registered.");
 
-		void PartEvent(GameEvent handle)
+		void ComponentEvent(GameEvent handle)
 		{
 			e(handle as TEvent);
 		}
 
-		registeredEvents.Add(typeof(TEvent), PartEvent);
+		registeredEvents.Add(typeof(TEvent), ComponentEvent);
 	}
 
 	public abstract ComponentInfo QueryComponentInfo();
@@ -73,7 +73,7 @@ public abstract class Part : IComponent
 	public void AttachEntity(Entity entity)
 	{
 		if (Self != null)
-			throw new InvalidOperationException($"An entity is already attached to part: {this}");
+			throw new InvalidOperationException($"An entity is already attached to component: {this}");
 		Self = entity;
 	}
 
