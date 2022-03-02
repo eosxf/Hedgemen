@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hgm.Ecs;
 using Hgm.Ecs.Text;
 using Hgm.IO;
 using Hgm.IO.Serialization;
+using Hgm.Register;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,10 +27,18 @@ public sealed class HedgemenProc : Game, IHedgemen
 
 	protected override void Initialize()
 	{
-		Hedgemen.RegisterAssembly(typeof(HedgemenProc));
+		Hedgemen.RegisterAssemblies(typeof(HedgemenProc), typeof(object));
+		TestKaze();
 		TestEcs();
 		TestSchema();
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
+	}
+
+	private void TestKaze()
+	{
+		Hedgemen.Kaze.Registry.Components.Register("hedgemen:character_sheet", () => new CharacterSheet());
+		var sheet = Hedgemen.Kaze.Registry.Components["hedgemen:character_sheet"]() as CharacterSheet;
+		Console.WriteLine($"Sheet: {sheet.Strength}");
 	}
 
 	private void TestEcs()

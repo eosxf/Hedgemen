@@ -52,7 +52,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Base" />
         <Folder Include="Ecs\Systems" />
     </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿namespace Hgm.Ecs;
 
-public class Cell
+public class Character
 {
 	
 }

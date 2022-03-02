@@ -46,24 +46,24 @@ public class CharacterSheet : Part
 	{
 		return new SerializedInfo(this, new SerializedFields
 		{
-			{"strength", Strength},
-			{"dexterity", Dexterity},
-			{"constitution", Constitution},
-			{"intelligence", Intelligence},
-			{"wisdom", Wisdom},
-			{"charisma", Charisma},
-			{"class", Class.GetSerializedInfo()}
+			{"hedgemen:character_sheet/strength", Strength},
+			{"hedgemen:character_sheet/dexterity", Dexterity},
+			{"hedgemen:character_sheet/constitution", Constitution},
+			{"hedgemen:character_sheet/intelligence", Intelligence},
+			{"hedgemen:character_sheet/wisdom", Wisdom},
+			{"hedgemen:character_sheet/charisma", Charisma},
+			{"hedgemen:character_sheet/class", Class.GetSerializedInfo()}
 		});
 	}
 
 	public override void InitializeFromFields(SerializedFields fields)
 	{
-		Strength = fields.Get("strength", 10);
-		Dexterity = fields.Get("dexterity", 10);
-		Constitution = fields.Get("constitution", 10);
-		Intelligence = fields.Get("intelligence", 10);
-		Wisdom = fields.Get("wisdom", 10);
-		Charisma = fields.Get("charisma", 10);
-		Class = fields.Get("class").Instantiate<CharacterClass>();
+		Strength = fields.Get("hedgemen:character_sheet/strength", 10);
+		Dexterity = fields.Get("hedgemen:character_sheet/dexterity", 10);
+		Constitution = fields.Get("hedgemen:character_sheet/constitution", 10);
+		Intelligence = fields.Get("hedgemen:character_sheet/intelligence", 10);
+		Wisdom = fields.Get("hedgemen:character_sheet/wisdom", 10);
+		Charisma = fields.Get("hedgemen:character_sheet/charisma", 10);
+		Class = fields.Get("hedgemen:character_sheet/class").Instantiate<CharacterClass>();
 	}
 }

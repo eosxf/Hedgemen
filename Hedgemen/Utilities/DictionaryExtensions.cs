@@ -6,8 +6,7 @@ public static class DictionaryExtensions
 {
 	public static TValue Get<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key)
 	{
-		TValue val = default;
-		self.TryGetValue(key, out val);
+		self.TryGetValue(key, out var val);
 		return val;
 	}
 }
