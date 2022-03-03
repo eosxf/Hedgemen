@@ -6,12 +6,10 @@ using Hgm.Ecs;
 using Hgm.Ecs.Text;
 using Hgm.IO;
 using Hgm.IO.Serialization;
-using Hgm.Register;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CharacterSheet = Hgm.Ecs.CharacterSheet;
-using Entity = Hgm.Ecs.Entity;
 
 namespace Hgm;
 
@@ -28,9 +26,9 @@ public sealed class HedgemenProc : Game, IHedgemen
 	protected override void Initialize()
 	{
 		Hedgemen.RegisterAssemblies(typeof(HedgemenProc), typeof(object));
-		TestKaze();
+		//TestKaze();
 		TestEcs();
-		TestSchema();
+		//TestSchema();
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
 	}
 
@@ -53,6 +51,8 @@ public sealed class HedgemenProc : Game, IHedgemen
 		sheet.Strength = 1025;
 		sheet.Intelligence = 10;
 		sheet.Charisma = 15;
+		
+		Console.WriteLine(entity.GetComponent<CharacterSheet>().QueryComponentInfo());
 
 		var eChangeClass = entity.Propagate(new ChangeClassEvent("archer"));
 		Console.WriteLine($"Handled event '{typeof(ChangeClassEvent)}'? Answer: {eChangeClass.Handled}");

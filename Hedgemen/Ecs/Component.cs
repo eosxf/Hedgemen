@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
+using Hgm.Register;
+using Hgm.Utilities;
 
 namespace Hgm.Ecs;
 
@@ -10,7 +14,7 @@ namespace Hgm.Ecs;
 /// </summary>
 public abstract class Component : IComponent
 {
-	private readonly IDictionary<Type, ComponentEventWrapper> registeredEvents = new Dictionary<Type, ComponentEventWrapper>();
+	private readonly IDictionary<Type, ComponentEventWrapper> _registeredEvents = new Dictionary<Type, ComponentEventWrapper>();
 	public Entity Self { get; private set; }
 
 	public virtual void InitializeFromSchema(ComponentSchema schema)
@@ -26,8 +30,8 @@ public abstract class Component : IComponent
 
 	public bool HandleEvent(GameEvent e)
 	{
-		if (!registeredEvents.ContainsKey(e.GetType())) return false;
-		registeredEvents[e.GetType()](e);
+		if (!_registeredEvents.ContainsKey(e.GetType())) return false;
+		_registeredEvents[e.GetType()](e);
 		OnEventPropagated(e);
 		return true;
 	}
@@ -37,7 +41,7 @@ public abstract class Component : IComponent
 		if (e == null)
 			throw new Exception("Registered events cannot be null!");
 
-		if (registeredEvents.ContainsKey(typeof(TEvent)))
+		if (_registeredEvents.ContainsKey(typeof(TEvent)))
 			throw new Exception($"Event type {typeof(TEvent).FullName} already registered.");
 
 		void ComponentEvent(GameEvent handle)
@@ -45,10 +49,38 @@ public abstract class Component : IComponent
 			e(handle as TEvent);
 		}
 
-		registeredEvents.Add(typeof(TEvent), ComponentEvent);
+		_registeredEvents.Add(typeof(TEvent), ComponentEvent);
 	}
 
 	public abstract ComponentInfo QueryComponentInfo();
+
+	private NamespacedString QueryDefaultRegistryName()
+	{
+		string assemblyName = GetType().Assembly.GetName().Name!;
+		string typeName = ConvertTypeNameToSnakeCase();
+
+		return new NamespacedString
+			(assemblyName.ToLower(CultureInfo.InvariantCulture),
+			 typeName);
+	}
+
+	private string ConvertTypeNameToSnakeCase()
+	{
+		string typeName = GetType().Name;
+		var uppercaseOccurrences = typeName.AllUppercaseInstances();
+		var builder = new StringBuilder(typeName.Length + uppercaseOccurrences.Count);
+		builder.Append(typeName);
+		
+		foreach (var occurrence in uppercaseOccurrences)
+			builder.Replace(occurrence.ToString(), "_" + char.ToLowerInvariant(occurrence));
+		
+		// remove the likely char[0] _ char with string.Empty
+		// since classes should be PascalCase and thus would create _
+		if (builder[0] == '_')
+			builder.Replace("_", string.Empty, 0, 1);
+		
+		return builder.ToString();
+	}
 
 	public virtual SerializedInfo GetSerializedInfo()
 	{
@@ -67,7 +99,7 @@ public abstract class Component : IComponent
 
 	public bool IsEventRegistered(Type eventType)
 	{
-		return registeredEvents.ContainsKey(eventType);
+		return _registeredEvents.ContainsKey(eventType);
 	}
 
 	public void AttachEntity(Entity entity)
@@ -79,5 +111,6 @@ public abstract class Component : IComponent
 
 	public virtual void OnEventPropagated(GameEvent gameEvent)
 	{
+		
 	}
 }

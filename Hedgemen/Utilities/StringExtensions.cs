@@ -1,19 +1,45 @@
-﻿namespace Hgm.Utilities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Hgm.Utilities;
 
 public static class StringExtensions
 {
-	/*public static T FromJson<T>(this string str, JsonSerializerSettings settings = null)
+	public static List<int> AllIndicesOf(this string str, string search)
 	{
-		return JsonConvert.DeserializeObject<T>(str, settings);
+		var occurrences = new List<int>(str.Length);
+
+		for (int i = str.IndexOf(search, StringComparison.InvariantCulture);
+		     i >= -1;
+		     i = search.IndexOf(search, i + 1,StringComparison.InvariantCulture))
+		{
+			occurrences.Add(i);
+		}
+		
+		return occurrences;
+	}
+	
+	public static List<int> AllIndicesOf(this string str, Func<char, bool> condition)
+	{
+		var occurrences = new List<int>(str.Length);
+
+		for (int i = 0; i < str.Length; ++i)
+			if(condition(str[i]))
+				occurrences.Add(i);
+		
+		return occurrences;
 	}
 
-	public static object FromJson(this string str, Type type, JsonSerializerSettings settings = null)
+	public static List<char> AllUppercaseInstances(this string str)
 	{
-		return JsonConvert.DeserializeObject(str, type, settings);
-	}
+		var occurrences = new List<char>(str.Length);
 
-	public static string ToJson(this object obj, JsonSerializerSettings settings = null)
-	{
-		return JsonConvert.SerializeObject(obj, settings);
-	}*/
+		for (int i = 0; i < str.Length; ++i)
+		{
+			if(char.IsUpper(str[i]))
+				occurrences.Add(str[i]);
+		}
+
+		return occurrences;
+	}
 }

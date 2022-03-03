@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Hgm.Register;
 
 namespace Hgm.Ecs;
@@ -26,4 +27,18 @@ public readonly struct ComponentInfo
 	public Type AccessType { get; init; }
 
 	public bool PropagatesIgnoredEvents { get; init; }
+
+	public override string ToString()
+	{
+		return new StringBuilder()
+			.Append("RegistryName: ")
+			.Append(RegistryName)
+			.Append('\n')
+			.Append("AccessType: ")
+			.Append(AccessType)
+			.Append('\n')
+			.Append("PropagatesIgnoredEvents: ")
+			.Append(PropagatesIgnoredEvents)
+			.ToString();
+	}
 }
