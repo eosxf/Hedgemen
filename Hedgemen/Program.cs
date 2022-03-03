@@ -1,5 +1,10 @@
-﻿using Hgm.Modding;
+﻿using System;
+using System.IO;
+using Hgm.IO;
+using Hgm.Modding;
 using Hgm.Register;
+using Hgm.Utilities;
+using File = Hgm.IO.File;
 
 namespace Hgm;
 
@@ -13,11 +18,26 @@ public static class Program
 			KazeInitStep = new KazeInitStep
 			{
 				Registry = new KazeRegistry()
-			}
+			},
+			Logger = new DefaultLogger()
 		};
-		
-		Hedgemen.InitializeHedgemen(initStep);
-		Hedgemen.Proc.Run();
-		Hedgemen.Finish();
+
+		try
+		{
+			Hedgemen.InitializeHedgemen(initStep);
+			Hedgemen.Proc.Run();
+			IFile hedgemenLogOutputFile = new File("hedgemen.log");
+			hedgemenLogOutputFile.WriteString(Hedgemen.Logger.ToString());
+			Hedgemen.Finish();
+		}
+
+		catch (Exception e)
+		{
+			// this might cause issues where the IFile.WriteString method is the method causing the exception to
+			// be thrown, but I'm lazy
+			IFile hedgemenLogOutputFile = new File("hedgemen.log");
+			hedgemenLogOutputFile.WriteString(Hedgemen.Logger.ToString());
+            throw;
+        }
 	}
 }

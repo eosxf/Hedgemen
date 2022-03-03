@@ -34,6 +34,10 @@ public static class Hedgemen
 		}
 	}
 
+	private static ILogger _logger;
+
+	public static ILogger Logger => _logger;
+
 	public static void RegisterAssemblies(params Type[] types)
 	{
 		foreach(var type in types)
@@ -50,7 +54,7 @@ public static class Hedgemen
 	public static void InitializeHedgemen(HedgemenInitStep init)
 	{
 		if (_initialized)
-			throw new InvalidOperationException($"{nameof(Hedgemen)} is already initialized!");
+			throw new InvalidOperationException($"{typeof(Hedgemen)} is already initialized!");
 
 		bool initStateProperlySet = init.IsProperlyInitialized();
 
@@ -59,6 +63,7 @@ public static class Hedgemen
 		
 		Proc = init.Proc;
 		Kaze = new Kaze(init.KazeInitStep);
+		_logger = init.Logger;
 		_initialized = true;
 	}
 
@@ -89,6 +94,10 @@ public struct HedgemenInitStep : IInitStep
 {
 	public IHedgemen Proc;
 	public KazeInitStep KazeInitStep;
+	public ILogger Logger;
 
-	public bool IsProperlyInitialized() => Proc != null && KazeInitStep.IsProperlyInitialized();
+	public bool IsProperlyInitialized() => 
+		Proc != null &&
+		KazeInitStep.IsProperlyInitialized() &&
+		Logger != null;
 }

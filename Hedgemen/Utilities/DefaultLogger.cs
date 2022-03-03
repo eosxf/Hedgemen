@@ -98,4 +98,6 @@ public class DefaultLogger : ILogger
 	{
 		return logLevel >= LogLevel;
 	}
+
+	public override string ToString() => builder.ToString();
 }

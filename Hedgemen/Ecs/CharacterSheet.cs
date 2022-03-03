@@ -27,7 +27,8 @@ public class CharacterSheet : Component
 	{
 		var oldClass = Class.ClassName;
 		Class.ClassName = e.ClassName;
-		Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
+		//Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
+		Hedgemen.Logger.Error($"Changed class from '{oldClass}' to '{e.ClassName}'");
 
 		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasComponent<CharacterSheet>()}");
 	}

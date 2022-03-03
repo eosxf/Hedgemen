@@ -86,7 +86,7 @@ public class Entity : IEntity
 		var infoQuery = component.QueryComponentInfo();
 
 		if (_components.ContainsKey(infoQuery.AccessType))
-			throw new ArgumentException($"{GetType().Name} already has a {nameof(Component)} with an AccessType of " +
+			throw new ArgumentException($"{GetType().Name} already has a {typeof(Component)} with an AccessType of " +
 			                            $"{infoQuery.AccessType.FullName}");
 		component.AttachEntity(this);
 		_components.Add(infoQuery.AccessType, component);
