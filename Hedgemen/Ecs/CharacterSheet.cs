@@ -1,6 +1,4 @@
 ﻿using System;
-using Hgm.Ecs.Text;
-using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 
@@ -42,44 +40,5 @@ public class CharacterSheet : Component
 			AccessType = typeof(CharacterSheet),
 			PropagatesIgnoredEvents = true
 		};
-	}
-
-	public override SerializedInfo GetSerializedInfo()
-	{
-		return new SerializedInfo(this, new SerializedFields
-		{
-			{"hedgemen:character_sheet/strength", Strength},
-			{"hedgemen:character_sheet/dexterity", Dexterity},
-			{"hedgemen:character_sheet/constitution", Constitution},
-			{"hedgemen:character_sheet/intelligence", Intelligence},
-			{"hedgemen:character_sheet/wisdom", Wisdom},
-			{"hedgemen:character_sheet/charisma", Charisma},
-			{"hedgemen:character_sheet/class", Class.GetSerializedInfo()}
-		});
-	}
-
-	protected override void InitializeFromFields(IHasSerializedFields handle, SerializedFields fields)
-	{
-		// just an example of type matching for initialization context.
-		if (handle is ComponentSchema schema)
-		{
-			Hedgemen.Logger.Debug($"Deserializing with {typeof(ComponentSchema)} context.");
-			Class = fields.GetFields<CharacterClass>("hedgemen:character_sheet/class");
-		}
-		
-		else if (handle is SerializedInfo info)
-		{
-			Hedgemen.Logger.Debug($"Deserializing with {typeof(SerializedInfo)} context.");
-			Class = fields.Get("hedgemen:character_sheet/class")?.Instantiate<CharacterClass>();
-		}
-		
-		// if you don't care about the deserialization context you can just use the fields exclusively
-		Strength = fields.Get("hedgemen:character_sheet/strength", 10);
-		Dexterity = fields.Get("hedgemen:character_sheet/dexterity", 10);
-		Constitution = fields.Get("hedgemen:character_sheet/constitution", 10);
-		// we purposefully get the wrong value to test default return
-		Intelligence = fields.Get("hedgemen:character_sheet/intelligencee", 55);
-		Wisdom = fields.Get("hedgemen:character_sheet/wisdom", 10);
-		Charisma = fields.Get("hedgemen:character_sheet/charisma", 10);
 	}
 }

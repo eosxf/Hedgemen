@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Hgm.Ecs.Text;
-using Hgm.IO.Serialization;
 using Hgm.Utilities;
 
 namespace Hgm.Ecs;
@@ -60,37 +58,6 @@ public class Entity : IEntity
 				return true;
 
 		return false;
-	}
-
-	public SerializedInfo GetSerializedInfo()
-	{
-		var fields = new SerializedFields();
-
-		foreach (var component in _components.Values)
-			fields.Add(component.QueryComponentInfo().RegistryName, component.GetSerializedInfo());
-
-		return new SerializedInfo(this, fields);
-	}
-
-	public void ReadSerializedInfo(SerializedInfo info)
-	{
-		foreach (var componentName in info.Fields)
-		{
-			var componentSerializedInfo = info.Fields.Get<SerializedInfo>(componentName.Key);
-			var component = componentSerializedInfo.Instantiate<Component>(Hedgemen.RegisteredAssemblies, false);
-			InternalAddComponent(component);
-			component.Initialize(componentSerializedInfo);
-		}
-	}
-
-	public void ReadEntitySchema(EntitySchema schema)
-	{
-		foreach (var componentSchema in schema.Components)
-		{
-			var component = Hedgemen.Kaze.Registry.Components[componentSchema.RegistryName]();
-			InternalAddComponent(component);
-			component.Initialize(componentSchema);
-		}
 	}
 
 	public void AddComponent(IComponent component)

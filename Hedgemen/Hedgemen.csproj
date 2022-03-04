@@ -53,6 +53,8 @@
 
     <ItemGroup>
         <Folder Include="Ecs\Systems" />
+        <Folder Include="Ecs\Text" />
+        <Folder Include="IO\Serialization" />
     </ItemGroup>
 
 </Project>

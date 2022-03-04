@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Hgm.Ecs.Text;
-using Hgm.IO.Serialization;
 using Hgm.Register;
 using Hgm.Utilities;
 
@@ -26,14 +24,6 @@ public abstract class Component : IComponent
 		InitializeSelf();
 	}
 
-	public void Initialize(IHasSerializedFields handle)
-	{
-		ThrowIfInitialized();
-		_initialized = true;
-		InitializeSelf();
-		InitializeFromFields(handle, handle.Fields);
-	}
-
 	private void ThrowIfInitialized()
 	{
 		if (_initialized)
@@ -41,17 +31,6 @@ public abstract class Component : IComponent
 	}
 
 	protected abstract void InitializeSelf();
-
-	/// <summary>
-	/// Initializes from fields.
-	/// </summary>
-	/// <param name="handle">The owner of the fields parameter. Useful for type matching for initialization
-	/// context.</param>
-	/// <param name="fields">The serialized fields to read from. Owner is the handle parameter</param>
-	protected virtual void InitializeFromFields(IHasSerializedFields handle, SerializedFields fields)
-	{
-		
-	}
 
 	public bool IsActive { get; set; } = true;
 
@@ -108,16 +87,6 @@ public abstract class Component : IComponent
 			builder.Replace("_", string.Empty, 0, 1);
 		
 		return builder.ToString();
-	}
-
-	public virtual SerializedInfo GetSerializedInfo()
-	{
-		return new SerializedInfo(this, new SerializedFields());
-	}
-
-	public virtual void ReadSerializedInfo(SerializedInfo info)
-	{
-		InitializeFromFields(info, info.Fields);
 	}
 
 	public bool IsEventRegistered<TEvent>() where TEvent : GameEvent

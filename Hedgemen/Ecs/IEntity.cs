@@ -1,9 +1,8 @@
 using System;
-using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 
-public interface IEntity : ISerializableInfo
+public interface IEntity
 {
 	/// <summary>
 	/// Handles a current Event if able to.

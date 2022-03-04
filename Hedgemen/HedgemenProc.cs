@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hgm.Base;
 using Hgm.Ecs;
-using Hgm.Ecs.Text;
 using Hgm.IO;
-using Hgm.IO.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using CharacterSheet = Hgm.Ecs.CharacterSheet;
+using File = Hgm.IO.File;
 
 namespace Hgm;
 
@@ -27,78 +24,17 @@ public sealed class HedgemenProc : Game, IHedgemen
 	protected override void Initialize()
 	{
 		Hedgemen.RegisterAssemblies(typeof(HedgemenProc), typeof(object));
-		TestKaze();
-		//TestEcs();
-		TestSchema();
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
-	}
-
-	private void TestKaze()
-	{
-		var hedgemen = new HedgemenMod();
-		hedgemen.Initialize();
-		var sheet = Hedgemen.Kaze.Registry.Components["hedgemen:character_sheet"]() as CharacterSheet;
-		Console.WriteLine($"Sheet: {sheet.Strength}");
-	}
-
-	private void TestEcs()
-	{
-		var entity = new Entity();
-		entity.AddComponent(new CharacterSheet
-		{
-			Class = new CharacterClassWarrior()
-		});
-
-		var sheet = entity.GetComponent<CharacterSheet>();
-		sheet.Strength = 1025;
-		sheet.Intelligence = 10;
-		sheet.Charisma = 15;
-		
-		Console.WriteLine(entity.GetComponent<CharacterSheet>().QueryComponentInfo());
-
-		var eChangeClass = entity.Propagate(new ChangeClassEvent("archer"));
-		Console.WriteLine($"Handled event '{typeof(ChangeClassEvent)}'? Answer: {eChangeClass.Handled}");
-
-		SerializeJson(entity);
 	}
 
 	private void TestSchema()
 	{
-		var schema = new EntitySchema(new File("sentient_apple_pie_schema.json"));
-		Console.WriteLine(schema);
-
-		var foodSchema = schema.Components[0];
-		Console.WriteLine("Food healing amount: {0}", foodSchema.Fields.Get<int>("healing_amount"));
-
-		var entity = new Entity();
-		entity.ReadEntitySchema(schema);
 		
-		Console.WriteLine(entity.GetComponent<CharacterSheet>().Class.ClassName);
 	}
 
 	private void SerializeJson(Entity entity)
 	{
-		IFile file = new File("serialized_obj.json");
-
-		var options = new JsonSerializerOptions
-		{
-			IgnoreReadOnlyFields = false,
-			IgnoreReadOnlyProperties = false,
-			IncludeFields = false,
-			UnknownTypeHandling = JsonUnknownTypeHandling.JsonNode,
-			WriteIndented = true
-		};
-
-		file.WriteString(JsonSerializer.Serialize(entity.GetSerializedInfo(), options));
-
-		var entity2Info = JsonSerializer.Deserialize<SerializedInfo>(file.Open(), options)!;
-
-		var entity2 = entity2Info.Instantiate<Entity>();
-		Console.WriteLine(entity.GetComponent<CharacterSheet>());
 		
-		Console.WriteLine(entity2.GetComponent<CharacterSheet>().Intelligence);
-
-		Console.WriteLine($"obj2 class_name: {entity2.GetComponent<CharacterSheet>().Class.ClassName}");
 	}
 
 	protected override void Update(GameTime gameTime)
