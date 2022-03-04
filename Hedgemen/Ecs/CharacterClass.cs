@@ -6,5 +6,6 @@ public class CharacterClass : IGameEventHandler
 
 	public void Propagate(GameEvent gameEvent)
 	{
+		
 	}
 }

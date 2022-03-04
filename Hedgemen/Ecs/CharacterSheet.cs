@@ -1,11 +1,12 @@
 ﻿using System;
+using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 
 /// <summary>
 /// Debug class, not meant for actual game
 /// </summary>
-public class CharacterSheet : Component
+public class CharacterSheet : Component, ISerializableState<CharacterSheetState>
 {
 	protected override void InitializeSelf()
 	{
@@ -26,7 +27,6 @@ public class CharacterSheet : Component
 	{
 		var oldClass = Class.ClassName;
 		Class.ClassName = e.ClassName;
-		//Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
 		Hedgemen.Logger.Debug($"Changed class from '{oldClass}' to '{e.ClassName}'");
 
 		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasComponent<CharacterSheet>()}");
@@ -41,4 +41,40 @@ public class CharacterSheet : Component
 			PropagatesIgnoredEvents = true
 		};
 	}
+
+	public CharacterSheetState ToState()
+	{
+		return new CharacterSheetState
+		{
+			Strength = Strength,
+			Dexterity = Dexterity,
+			Constitution = Constitution,
+			Intelligence = Intelligence,
+			Wisdom = Wisdom,
+			Charisma = Charisma,
+			ClassName = Class.ClassName
+		};
+	}
+
+	public void FromState(CharacterSheetState state)
+	{
+		Strength = state.Strength;
+		Dexterity = state.Dexterity;
+		Constitution = state.Constitution;
+		Intelligence = state.Intelligence;
+		Wisdom = state.Wisdom;
+		Charisma = state.Charisma;
+		Class = new CharacterClass { ClassName = state.ClassName };
+	}
+}
+
+public struct CharacterSheetState
+{
+	public int Strength;
+	public int Dexterity;
+	public int Constitution;
+	public int Intelligence;
+	public int Wisdom;
+	public int Charisma;
+	public string ClassName;
 }

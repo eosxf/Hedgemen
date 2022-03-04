@@ -27,16 +27,6 @@ public sealed class HedgemenProc : Game, IHedgemen
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
 	}
 
-	private void TestSchema()
-	{
-		
-	}
-
-	private void SerializeJson(Entity entity)
-	{
-		
-	}
-
 	protected override void Update(GameTime gameTime)
 	{
 		if (Keyboard.GetState().IsKeyDown(Keys.Escape))
