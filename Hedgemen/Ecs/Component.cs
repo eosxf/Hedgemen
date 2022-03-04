@@ -17,13 +17,40 @@ public abstract class Component : IComponent
 	private readonly IDictionary<Type, ComponentEventWrapper> _registeredEvents = new Dictionary<Type, ComponentEventWrapper>();
 	public Entity Self { get; private set; }
 
-	public virtual void InitializeFromSchema(ComponentSchema schema)
+	private bool _initialized = false;
+
+	public void Initialize()
 	{
-		InitializeFromFields(schema.Fields);
+		ThrowIfInitialized();
+		_initialized = true;
+		InitializeSelf();
 	}
 
-	public virtual void InitializeFromFields(SerializedFields fields)
+	public void Initialize(IHasSerializedFields handle)
 	{
+		ThrowIfInitialized();
+		_initialized = true;
+		InitializeSelf();
+		InitializeFromFields(handle, handle.Fields);
+	}
+
+	private void ThrowIfInitialized()
+	{
+		if (_initialized)
+			throw new InvalidOperationException($"Component '{GetType()}' is already initialized.");
+	}
+
+	protected abstract void InitializeSelf();
+
+	/// <summary>
+	/// Initializes from fields.
+	/// </summary>
+	/// <param name="handle">The owner of the fields parameter. Useful for type matching for initialization
+	/// context.</param>
+	/// <param name="fields">The serialized fields to read from. Owner is the handle parameter</param>
+	protected virtual void InitializeFromFields(IHasSerializedFields handle, SerializedFields fields)
+	{
+		
 	}
 
 	public bool IsActive { get; set; } = true;
@@ -52,6 +79,7 @@ public abstract class Component : IComponent
 		_registeredEvents.Add(typeof(TEvent), ComponentEvent);
 	}
 
+	// for now QueryComponentInfo will remain abstract, might become virtual eventually
 	public abstract ComponentInfo QueryComponentInfo();
 
 	private NamespacedString QueryDefaultRegistryName()
@@ -89,7 +117,7 @@ public abstract class Component : IComponent
 
 	public virtual void ReadSerializedInfo(SerializedInfo info)
 	{
-		InitializeFromFields(info.Fields);
+		InitializeFromFields(info, info.Fields);
 	}
 
 	public bool IsEventRegistered<TEvent>() where TEvent : GameEvent

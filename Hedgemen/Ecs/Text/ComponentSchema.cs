@@ -4,13 +4,13 @@ using Hgm.Register;
 
 namespace Hgm.Ecs.Text;
 
-public class ComponentSchema
+public class ComponentSchema : IHasSerializedFields
 {
 	[JsonInclude] [JsonPropertyName("fields")]
-	public SerializedFields Fields;
+	public SerializedFields Fields { get; private set; }
 
 	[JsonInclude] [JsonPropertyName("registry_name")]
-	public string RegistryName;
+	public string RegistryName { get; private set; }
 
 	public ComponentSchema(JsonView view)
 	{

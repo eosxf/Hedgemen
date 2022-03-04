@@ -1,4 +1,5 @@
 ﻿using System;
+using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
@@ -8,9 +9,9 @@ namespace Hgm.Ecs;
 /// </summary>
 public class CharacterSheet : Component
 {
-	public CharacterSheet()
+	protected override void InitializeSelf()
 	{
-		Class = new CharacterClass();
+		Class = new CharacterClass { ClassName = "warrior" };
 		RegisterEvent<ChangeClassEvent>(ChangeClass);
 	}
 
@@ -28,7 +29,7 @@ public class CharacterSheet : Component
 		var oldClass = Class.ClassName;
 		Class.ClassName = e.ClassName;
 		//Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
-		Hedgemen.Logger.Error($"Changed class from '{oldClass}' to '{e.ClassName}'");
+		Hedgemen.Logger.Debug($"Changed class from '{oldClass}' to '{e.ClassName}'");
 
 		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasComponent<CharacterSheet>()}");
 	}
@@ -57,14 +58,26 @@ public class CharacterSheet : Component
 		});
 	}
 
-	public override void InitializeFromFields(SerializedFields fields)
+	protected override void InitializeFromFields(IHasSerializedFields handle, SerializedFields fields)
 	{
+		// just an example of type matching for initialization context.
+		if (handle is ComponentSchema schema)
+		{
+			
+		}
+		
+		else if (handle is SerializedInfo info)
+		{
+			
+		}
+		
+		// if you don't care about the deserialization context you can just use the fields exclusively
 		Strength = fields.Get("hedgemen:character_sheet/strength", 10);
 		Dexterity = fields.Get("hedgemen:character_sheet/dexterity", 10);
 		Constitution = fields.Get("hedgemen:character_sheet/constitution", 10);
 		Intelligence = fields.Get("hedgemen:character_sheet/intelligence", 10);
 		Wisdom = fields.Get("hedgemen:character_sheet/wisdom", 10);
 		Charisma = fields.Get("hedgemen:character_sheet/charisma", 10);
-		Class = fields.Get("hedgemen:character_sheet/class").Instantiate<CharacterClass>();
+		Class = fields.Get("hedgemen:character_sheet/class")?.Instantiate<CharacterClass>();
 	}
 }

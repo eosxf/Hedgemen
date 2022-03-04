@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace Hgm.IO.Serialization;
 
 [Serializable]
-public class SerializedInfo
+public class SerializedInfo : IHasSerializedFields
 {
 	private string _assemblyName;
 

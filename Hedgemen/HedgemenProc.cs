@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Hgm.Base;
 using Hgm.Ecs;
 using Hgm.Ecs.Text;
 using Hgm.IO;
@@ -34,7 +35,8 @@ public sealed class HedgemenProc : Game, IHedgemen
 
 	private void TestKaze()
 	{
-		Hedgemen.Kaze.Registry.Components.Register("hedgemen:character_sheet", () => new CharacterSheet());
+		var hedgemen = new HedgemenMod();
+		hedgemen.Initialize();
 		var sheet = Hedgemen.Kaze.Registry.Components["hedgemen:character_sheet"]() as CharacterSheet;
 		Console.WriteLine($"Sheet: {sheet.Strength}");
 	}

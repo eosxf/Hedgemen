@@ -83,6 +83,12 @@ public class Entity : IEntity
 
 	public void AddComponent(Component component)
 	{
+		InternalAddComponent(component);
+		component.Initialize();
+	}
+
+	private void InternalAddComponent(Component component)
+	{
 		var infoQuery = component.QueryComponentInfo();
 
 		if (_components.ContainsKey(infoQuery.AccessType))
