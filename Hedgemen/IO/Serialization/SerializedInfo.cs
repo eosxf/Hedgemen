@@ -49,21 +49,22 @@ public class SerializedInfo : IHasSerializedFields
 		private set => _fields = value;
 	}
 
-	public T Instantiate<T>(IReadOnlyDictionary<string, Assembly> registeredAssemblies = null)
+	public T Instantiate<T>(IReadOnlyDictionary<string, Assembly> registeredAssemblies = null, bool init = true)
 		where T : ISerializableInfo
 	{
-		return (T) Instantiate(registeredAssemblies);
+		return (T) Instantiate(registeredAssemblies, init);
 	}
 
-	public ISerializableInfo Instantiate(IReadOnlyDictionary<string, Assembly> registeredAssemblies = null)
+	public ISerializableInfo Instantiate(IReadOnlyDictionary<string, Assembly> registeredAssemblies = null,
+										 bool init = true)
 	{
 		registeredAssemblies ??= Hedgemen.RegisteredAssemblies;
 		// we need a way to access assemblies because NativeAoT doesn't allow you to get assemblies via
 		// Activator.CreateInstance(assemblyName, typeName). Aka, eat my ass, NativeAoT. Jk, love you
 		var assembly = registeredAssemblies[_assemblyName];
 		var obj = (assembly.CreateInstance(_typeName) as ISerializableInfo)!;
-		obj.ReadSerializedInfo(this);
-
+		if(init)
+			obj.ReadSerializedInfo(this);
 		return obj;
 	}
 }

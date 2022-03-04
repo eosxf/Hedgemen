@@ -63,21 +63,24 @@ public class CharacterSheet : Component
 		// just an example of type matching for initialization context.
 		if (handle is ComponentSchema schema)
 		{
-			
+			Hedgemen.Logger.Debug($"Deserializing with {typeof(ComponentSchema)} context.");
+			var className = fields.Get<SerializedFields>("hedgemen:character_sheet/class").Get<string>("hedgemen:class_name");
+			Class = new CharacterClass {ClassName = className};
 		}
 		
 		else if (handle is SerializedInfo info)
 		{
-			
+			Hedgemen.Logger.Debug($"Deserializing with {typeof(SerializedInfo)} context.");
+			Class = fields.Get("hedgemen:character_sheet/class")?.Instantiate<CharacterClass>();
 		}
 		
 		// if you don't care about the deserialization context you can just use the fields exclusively
 		Strength = fields.Get("hedgemen:character_sheet/strength", 10);
 		Dexterity = fields.Get("hedgemen:character_sheet/dexterity", 10);
 		Constitution = fields.Get("hedgemen:character_sheet/constitution", 10);
-		Intelligence = fields.Get("hedgemen:character_sheet/intelligence", 10);
+		// we purposefully get the wrong value to test default return
+		Intelligence = fields.Get("hedgemen:character_sheet/intelligencee", 55);
 		Wisdom = fields.Get("hedgemen:character_sheet/wisdom", 10);
 		Charisma = fields.Get("hedgemen:character_sheet/charisma", 10);
-		Class = fields.Get("hedgemen:character_sheet/class")?.Instantiate<CharacterClass>();
 	}
 }

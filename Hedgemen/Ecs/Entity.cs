@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 using Hgm.Utilities;
 
@@ -12,7 +13,7 @@ public delegate void ComponentEvent<in TEvent>(TEvent e) where TEvent : GameEven
 
 public class Entity : IEntity
 {
-	private readonly IDictionary<Type, Component> _components = new CachedDictionary<Type, Component>();
+	private readonly IDictionary<Type, IComponent> _components = new CachedDictionary<Type, IComponent>();
 
 	public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
 	{
@@ -76,18 +77,29 @@ public class Entity : IEntity
 		foreach (var componentName in info.Fields)
 		{
 			var componentSerializedInfo = info.Fields.Get<SerializedInfo>(componentName.Key);
-			var component = componentSerializedInfo.Instantiate<Component>(Hedgemen.RegisteredAssemblies);
-			AddComponent(component);
+			var component = componentSerializedInfo.Instantiate<Component>(Hedgemen.RegisteredAssemblies, false);
+			InternalAddComponent(component);
+			component.Initialize(componentSerializedInfo);
 		}
 	}
 
-	public void AddComponent(Component component)
+	public void ReadEntitySchema(EntitySchema schema)
+	{
+		foreach (var componentSchema in schema.Components)
+		{
+			var component = Hedgemen.Kaze.Registry.Components[componentSchema.RegistryName]();
+			InternalAddComponent(component);
+			component.Initialize(componentSchema);
+		}
+	}
+
+	public void AddComponent(IComponent component)
 	{
 		InternalAddComponent(component);
 		component.Initialize();
 	}
 
-	private void InternalAddComponent(Component component)
+	private void InternalAddComponent(IComponent component)
 	{
 		var infoQuery = component.QueryComponentInfo();
 

@@ -38,7 +38,7 @@ public interface IEntity : ISerializableInfo
 	public bool WillRespondTo(Type eventType);
 
 	// todo document these
-	public void AddComponent(Component component);
+	public void AddComponent(IComponent component);
 	public T GetComponent<T>() where T : class;
 	public bool HasComponent<T>() where T : class;
 }

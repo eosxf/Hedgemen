@@ -18,4 +18,6 @@ public interface IComponent : ISerializableInfo
 	public bool IsEventRegistered<TEvent>() where TEvent : GameEvent;
 	public bool IsEventRegistered(Type eventType);
 	public ComponentInfo QueryComponentInfo();
+	public void AttachEntity(Entity entity);
+	public void OnEventPropagated(GameEvent gameEvent);
 }

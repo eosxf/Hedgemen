@@ -4,7 +4,7 @@ using Hgm.Register;
 
 namespace Hgm.Ecs.Text;
 
-public class ComponentSchema : ISchema, IHasSerializedFields
+public class ObjectSchema : ISchema
 {
 	[JsonInclude] [JsonPropertyName("fields")]
 	public SerializedFields Fields { get; private set; }
@@ -12,7 +12,7 @@ public class ComponentSchema : ISchema, IHasSerializedFields
 	[JsonInclude] [JsonPropertyName("registry_name")]
 	public string RegistryName { get; private set; }
 
-	public ComponentSchema(JsonView view)
+	public ObjectSchema(JsonView view)
 	{
 		Initialize(view);
 	}

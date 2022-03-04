@@ -7,7 +7,7 @@ using Hgm.Register;
 
 namespace Hgm.Ecs.Text;
 
-public class EntitySchema
+public class EntitySchema : ISchema
 {
 	private List<ComponentSchema> _components;
 

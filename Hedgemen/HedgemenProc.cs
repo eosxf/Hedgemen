@@ -27,9 +27,9 @@ public sealed class HedgemenProc : Game, IHedgemen
 	protected override void Initialize()
 	{
 		Hedgemen.RegisterAssemblies(typeof(HedgemenProc), typeof(object));
-		//TestKaze();
-		TestEcs();
-		//TestSchema();
+		TestKaze();
+		//TestEcs();
+		TestSchema();
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
 	}
 
@@ -69,6 +69,11 @@ public sealed class HedgemenProc : Game, IHedgemen
 
 		var foodSchema = schema.Components[0];
 		Console.WriteLine("Food healing amount: {0}", foodSchema.Fields.Get<int>("healing_amount"));
+
+		var entity = new Entity();
+		entity.ReadEntitySchema(schema);
+		
+		Console.WriteLine(entity.GetComponent<CharacterSheet>().Class.ClassName);
 	}
 
 	private void SerializeJson(Entity entity)
@@ -90,6 +95,7 @@ public sealed class HedgemenProc : Game, IHedgemen
 
 		var entity2 = entity2Info.Instantiate<Entity>();
 		Console.WriteLine(entity.GetComponent<CharacterSheet>());
+		
 		Console.WriteLine(entity2.GetComponent<CharacterSheet>().Intelligence);
 
 		Console.WriteLine($"obj2 class_name: {entity2.GetComponent<CharacterSheet>().Class.ClassName}");
