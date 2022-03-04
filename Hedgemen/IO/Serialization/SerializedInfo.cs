@@ -20,6 +20,14 @@ public class SerializedInfo : IHasSerializedFields
 		_typeName = obj.GetType().FullName;
 		_fields = fields;
 	}
+	
+	public SerializedInfo(Type type, SerializedFields fields)
+	{
+		if (type is null) throw new ArgumentNullException(nameof(type));
+		_assemblyName = type.Assembly.GetName().Name;
+		_typeName = type.FullName;
+		_fields = fields;
+	}
 
 	public SerializedInfo()
 	{

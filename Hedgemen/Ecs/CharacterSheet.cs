@@ -64,8 +64,7 @@ public class CharacterSheet : Component
 		if (handle is ComponentSchema schema)
 		{
 			Hedgemen.Logger.Debug($"Deserializing with {typeof(ComponentSchema)} context.");
-			var className = fields.Get<SerializedFields>("hedgemen:character_sheet/class").Get<string>("hedgemen:class_name");
-			Class = new CharacterClass {ClassName = className};
+			Class = fields.GetFields<CharacterClass>("hedgemen:character_sheet/class");
 		}
 		
 		else if (handle is SerializedInfo info)

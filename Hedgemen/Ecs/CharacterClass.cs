@@ -22,6 +22,6 @@ public class CharacterClass : IGameEventHandler, ISerializableInfo
 
 	public void ReadSerializedInfo(SerializedInfo info)
 	{
-		ClassName = info.Fields.Get<string>("class_name");
+		ClassName = info.Fields.Get<string>("hedgemen:class_name");
 	}
 }
