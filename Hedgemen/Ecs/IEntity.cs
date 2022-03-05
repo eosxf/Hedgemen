@@ -3,7 +3,7 @@ using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 
-public interface IEntity : ISerializableInfo
+public interface IEntity : ISerializableState
 {
 	/// <summary>
 	/// Handles a current Event if able to.

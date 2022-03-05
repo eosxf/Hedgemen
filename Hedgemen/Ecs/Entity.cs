@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 using Hgm.Utilities;
@@ -62,24 +63,23 @@ public class Entity : IEntity
 		return false;
 	}
 
-	public SerializedInfo GetSerializedInfo()
+	public SerializationState GetObjectState()
 	{
-		var fields = new SerializedFields();
+		var state = new SerializationState(this);
+		foreach(var component in _components.Values)
+			state.AddValue(component.QueryComponentInfo().RegistryName, component.GetObjectState());
 
-		foreach (var component in _components.Values)
-			fields.Add(component.QueryComponentInfo().RegistryName, component.GetSerializedInfo());
-
-		return new SerializedInfo(this, fields);
+		return state;
 	}
 
-	public void ReadSerializedInfo(SerializedInfo info)
+	public void SetObjectState(SerializationState state)
 	{
-		foreach (var componentName in info.Fields)
+		foreach (var componentName in state.Fields)
 		{
-			var componentSerializedInfo = info.Fields.Get<SerializedInfo>(componentName.Key);
-			var component = componentSerializedInfo.Instantiate<Component>(Hedgemen.RegisteredAssemblies, false);
+			var componentSerializationState = state.GetState(componentName.Key);
+			var component = componentSerializationState.Instantiate<Component>(Hedgemen.RegisteredAssemblies, false);
 			InternalAddComponent(component);
-			component.Initialize(componentSerializedInfo);
+			component.Initialize(componentSerializationState);
 		}
 	}
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.Serialization;
 using System.Text;
 using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
@@ -26,12 +27,25 @@ public abstract class Component : IComponent
 		InitializeSelf();
 	}
 
-	public void Initialize(IHasSerializedFields handle)
+	public void Initialize(SerializationState state)
 	{
 		ThrowIfInitialized();
 		_initialized = true;
 		InitializeSelf();
-		InitializeFromFields(handle, handle.Fields);
+		SetObjectState(state);
+	}
+
+	public void Initialize(ComponentSchema schema)
+	{
+		ThrowIfInitialized();
+		_initialized = true;
+		InitializeSelf();
+		InitializeSchema(schema);
+	}
+
+	protected virtual void InitializeSchema(ComponentSchema schema)
+	{
+		
 	}
 
 	private void ThrowIfInitialized()
@@ -41,17 +55,6 @@ public abstract class Component : IComponent
 	}
 
 	protected abstract void InitializeSelf();
-
-	/// <summary>
-	/// Initializes from fields.
-	/// </summary>
-	/// <param name="handle">The owner of the fields parameter. Useful for type matching for initialization
-	/// context.</param>
-	/// <param name="fields">The serialized fields to read from. Owner is the handle parameter</param>
-	protected virtual void InitializeFromFields(IHasSerializedFields handle, SerializedFields fields)
-	{
-		
-	}
 
 	public bool IsActive { get; set; } = true;
 
@@ -110,14 +113,14 @@ public abstract class Component : IComponent
 		return builder.ToString();
 	}
 
-	public virtual SerializedInfo GetSerializedInfo()
+	public virtual SerializationState GetObjectState()
 	{
-		return new SerializedInfo(this, new SerializedFields());
+		return new SerializationState(this);
 	}
 
-	public virtual void ReadSerializedInfo(SerializedInfo info)
+	public virtual void SetObjectState(SerializationState state)
 	{
-		InitializeFromFields(info, info.Fields);
+		
 	}
 
 	public bool IsEventRegistered<TEvent>() where TEvent : GameEvent

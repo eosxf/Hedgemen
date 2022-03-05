@@ -8,11 +8,12 @@ namespace Hgm.Ecs;
 /// <summary>
 /// Composition focused objects for <see cref="Hgm.Ecs.IEntity" /> that can handle events and contain data.
 /// </summary>
-public interface IComponent : ISerializableInfo
+public interface IComponent : ISerializableState
 {
 	public bool IsActive { get; set; }
 	public void Initialize();
-	public void Initialize(IHasSerializedFields handle);
+	public void Initialize(SerializationState state);
+	public void Initialize(ComponentSchema schema);
 	public bool HandleEvent(GameEvent e);
 	public void RegisterEvent<TEvent>(ComponentEvent<TEvent> e) where TEvent : GameEvent;
 	public bool IsEventRegistered<TEvent>() where TEvent : GameEvent;

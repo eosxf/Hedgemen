@@ -9,6 +9,8 @@ public class HedgemenMod
 {
 	public void Initialize()
 	{
+		Hedgemen.Kaze.Registry.Components.Register("hedgemen:character", () => new Character());
+		Hedgemen.Kaze.Registry.Components.Register("hedgemen:cell", () => new Cell());
 		Hedgemen.Kaze.Registry.Components.Register("hedgemen:character_sheet", () => new CharacterSheet());
 	}
 }

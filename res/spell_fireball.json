@@ -1,0 +1,13 @@
+{
+	"type_name": "Hgm.Base.Spells.Fireball",
+	"assembly": "Hedgemen",
+	"registry_name": "hedgemen:spells/fireball",
+	"fields": {
+		"damage": 5,
+		"mp_cost": 10,
+		"resistences": [
+			"hedgemen:elements/air",
+			"hedgemen:elements/water"
+		]
+	}
+}

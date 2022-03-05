@@ -29,8 +29,36 @@ public sealed class HedgemenProc : Game, IHedgemen
 		Hedgemen.RegisterAssemblies(typeof(HedgemenProc), typeof(object));
 		TestKaze();
 		//TestEcs();
-		TestSchema();
+		//TestSchema();
+		TestNewSerialization();
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
+	}
+
+	private void TestNewSerialization()
+	{
+		var entity = new Entity();
+		entity.AddComponent(new CharacterSheet
+		{
+			Class = new CharacterClassWarrior()
+		});
+
+		var sheet = entity.GetComponent<CharacterSheet>();
+		sheet.Strength = 1025;
+		sheet.Intelligence = 10;
+		sheet.Charisma = 15;
+
+		var options = new JsonSerializerOptions
+		{
+			WriteIndented = true
+		};
+		
+		IFile file = new File("new_serialization.json");
+		string json = JsonSerializer.Serialize(entity.GetObjectState(), options);
+		file.WriteString(json);
+
+		var state = JsonSerializer.Deserialize<SerializationState>(json, options)!;
+		var newEntity = state.Instantiate<Entity>();
+		Console.WriteLine($"NewEntity Character Sheet Strength: {newEntity.GetComponent<CharacterSheet>().Strength}");
 	}
 
 	private void TestKaze()
@@ -68,7 +96,7 @@ public sealed class HedgemenProc : Game, IHedgemen
 		Console.WriteLine(schema);
 
 		var foodSchema = schema.Components[0];
-		Console.WriteLine("Food healing amount: {0}", foodSchema.Fields.Get<int>("healing_amount"));
+		//Console.WriteLine("Food healing amount: {0}", foodSchema.Fields.Get<int>("healing_amount"));
 
 		var entity = new Entity();
 		entity.ReadEntitySchema(schema);
@@ -89,9 +117,9 @@ public sealed class HedgemenProc : Game, IHedgemen
 			WriteIndented = true
 		};
 
-		file.WriteString(JsonSerializer.Serialize(entity.GetSerializedInfo(), options));
+		file.WriteString(JsonSerializer.Serialize(entity.GetObjectState(), options));
 
-		var entity2Info = JsonSerializer.Deserialize<SerializedInfo>(file.Open(), options)!;
+		var entity2Info = JsonSerializer.Deserialize<SerializationState>(file.Open(), options)!;
 
 		var entity2 = entity2Info.Instantiate<Entity>();
 		Console.WriteLine(entity.GetComponent<CharacterSheet>());

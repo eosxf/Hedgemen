@@ -10,8 +10,8 @@ public struct NamespacedString
 
 	public static NamespacedString Default => new(DefaultNamespace, DefaultName);
 
-	private string nameSpace;
-	private string name;
+	private string _namespace;
+	private string _name;
 
 	[JsonConstructor]
 	public NamespacedString(string fullyQualifiedString)
@@ -21,14 +21,14 @@ public struct NamespacedString
 		if (!IsValidQualifiedString(fullyQualifiedString))
 			throw new ArgumentException($"String {fullyQualifiedString} is not a valid namespaced string!");
 
-		nameSpace = fullyQualifiedStringSplit[0];
-		name = fullyQualifiedStringSplit[1];
+		_namespace = fullyQualifiedStringSplit[0];
+		_name = fullyQualifiedStringSplit[1];
 	}
 
-	public NamespacedString(string nameSpace, string name)
+	public NamespacedString(string @namespace, string name)
 	{
-		this.nameSpace = nameSpace;
-		this.name = name;
+		_namespace = @namespace;
+		_name = name;
 	}
 
 	[JsonIgnore]
@@ -36,11 +36,11 @@ public struct NamespacedString
 	{
 		get
 		{
-			nameSpace ??= DefaultNamespace;
-			return nameSpace;
+			_namespace ??= DefaultNamespace;
+			return _namespace;
 		}
 
-		set => nameSpace = value;
+		set => _namespace = value;
 	}
 
 	[JsonIgnore]
@@ -48,14 +48,14 @@ public struct NamespacedString
 	{
 		get
 		{
-			name ??= DefaultName;
-			return name;
+			_name ??= DefaultName;
+			return _name;
 		}
 
-		set => name = value;
+		set => _name = value;
 	}
 
-	[JsonPropertyName("name")] public string FullName => nameSpace + ':' + name;
+	[JsonPropertyName("name")] public string FullName => _namespace + ':' + _name;
 
 	private static bool IsValidQualifiedString(string fullyQualifiedString)
 	{

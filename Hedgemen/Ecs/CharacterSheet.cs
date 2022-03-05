@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 
@@ -44,42 +45,32 @@ public class CharacterSheet : Component
 		};
 	}
 
-	public override SerializedInfo GetSerializedInfo()
+	public override SerializationState GetObjectState()
 	{
-		return new SerializedInfo(this, new SerializedFields
-		{
-			{"hedgemen:character_sheet/strength", Strength},
-			{"hedgemen:character_sheet/dexterity", Dexterity},
-			{"hedgemen:character_sheet/constitution", Constitution},
-			{"hedgemen:character_sheet/intelligence", Intelligence},
-			{"hedgemen:character_sheet/wisdom", Wisdom},
-			{"hedgemen:character_sheet/charisma", Charisma},
-			{"hedgemen:character_sheet/class", Class.GetSerializedInfo()}
-		});
+		var state = new SerializationState(this);
+		state.AddValue("strength", Strength);
+		state.AddValue("dexterity", Dexterity);
+		state.AddValue("constitution", Constitution);
+		state.AddValue("intelligence", Intelligence);
+		state.AddValue("wisdom", Wisdom);
+		state.AddValue("charisma", Charisma);
+		state.AddValue("class", Class.GetObjectState());
+		return state;
 	}
 
-	protected override void InitializeFromFields(IHasSerializedFields handle, SerializedFields fields)
+	public override void SetObjectState(SerializationState state)
 	{
-		// just an example of type matching for initialization context.
-		if (handle is ComponentSchema schema)
-		{
-			Hedgemen.Logger.Debug($"Deserializing with {typeof(ComponentSchema)} context.");
-			Class = fields.GetFields<CharacterClass>("hedgemen:character_sheet/class");
-		}
+		Strength = state.GetValue("strength", 10);
+		Dexterity = state.GetValue("dexterity", 10);
+		Constitution = state.GetValue("constitution", 10);
+		Intelligence = state.GetValue("intelligence", 10);
+		Wisdom = state.GetValue("wisdom", 10);
+		Charisma = state.GetValue("charisma", 10);
+		Class = state.GetState("class")?.Instantiate<CharacterClass>();
+	}
+
+	protected override void InitializeSchema(ComponentSchema schema)
+	{
 		
-		else if (handle is SerializedInfo info)
-		{
-			Hedgemen.Logger.Debug($"Deserializing with {typeof(SerializedInfo)} context.");
-			Class = fields.Get("hedgemen:character_sheet/class")?.Instantiate<CharacterClass>();
-		}
-		
-		// if you don't care about the deserialization context you can just use the fields exclusively
-		Strength = fields.Get("hedgemen:character_sheet/strength", 10);
-		Dexterity = fields.Get("hedgemen:character_sheet/dexterity", 10);
-		Constitution = fields.Get("hedgemen:character_sheet/constitution", 10);
-		// we purposefully get the wrong value to test default return
-		Intelligence = fields.Get("hedgemen:character_sheet/intelligencee", 55);
-		Wisdom = fields.Get("hedgemen:character_sheet/wisdom", 10);
-		Charisma = fields.Get("hedgemen:character_sheet/charisma", 10);
 	}
 }

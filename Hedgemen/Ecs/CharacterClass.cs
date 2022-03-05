@@ -1,8 +1,9 @@
-﻿using Hgm.IO.Serialization;
+﻿using System.Runtime.Serialization;
+using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 
-public class CharacterClass : IGameEventHandler, ISerializableInfo
+public class CharacterClass : IGameEventHandler, ISerializableState
 {
 	public string ClassName { get; set; } = "nothing";
 
@@ -10,18 +11,15 @@ public class CharacterClass : IGameEventHandler, ISerializableInfo
 	{
 	}
 
-	public SerializedInfo GetSerializedInfo()
+	public SerializationState GetObjectState()
 	{
-		var fields = new SerializedFields
-		{
-			{"class_name", ClassName}
-		};
-
-		return new SerializedInfo(this, fields);
+		var state = new SerializationState(this);
+		state.AddValue("class_name", ClassName);
+		return state;
 	}
 
-	public void ReadSerializedInfo(SerializedInfo info)
+	public void SetObjectState(SerializationState state)
 	{
-		ClassName = info.Fields.Get<string>("hedgemen:class_name");
+		ClassName = state.GetValue("class_name", "nothing");
 	}
 }
