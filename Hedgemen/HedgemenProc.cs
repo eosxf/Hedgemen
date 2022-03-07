@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hgm.Base;
@@ -56,7 +55,7 @@ public sealed class HedgemenProc : Game, IHedgemen
 		string json = JsonSerializer.Serialize(entity.GetObjectState(), options);
 		file.WriteString(json);
 
-		var state = JsonSerializer.Deserialize<SerializationState>(json, options)!;
+		var state = JsonSerializer.Deserialize<SerializationState>(file.ReadString(), options)!;
 		var newEntity = state.Instantiate<Entity>();
 		Console.WriteLine($"NewEntity Character Sheet Strength: {newEntity.GetComponent<CharacterSheet>().Strength}");
 	}
@@ -96,7 +95,6 @@ public sealed class HedgemenProc : Game, IHedgemen
 		Console.WriteLine(schema);
 
 		var foodSchema = schema.Components[0];
-		//Console.WriteLine("Food healing amount: {0}", foodSchema.Fields.Get<int>("healing_amount"));
 
 		var entity = new Entity();
 		entity.ReadEntitySchema(schema);

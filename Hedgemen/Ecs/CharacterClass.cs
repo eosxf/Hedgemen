@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using Hgm.IO.Serialization;
+﻿using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
 

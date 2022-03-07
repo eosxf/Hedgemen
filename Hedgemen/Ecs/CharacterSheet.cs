@@ -25,6 +25,8 @@ public class CharacterSheet : Component
 
 	public CharacterClass Class { get; set; }
 
+	public ICharacterClass SelfClass => Self.GetComponent<ICharacterClass>();
+
 	public void ChangeClass(ChangeClassEvent e)
 	{
 		var oldClass = Class.ClassName;
