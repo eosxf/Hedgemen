@@ -4,17 +4,15 @@
 	"components": [
 		{
 			"registry_name": "hedgemen:character_sheet",
-			"fields": {
-				"strength": 1025,
-        		"dexterity": 1025,
-        		"constitution": 1025,
-				"intelligence": 1025,
-				"wisdom": 1025,
-				"charisma": 1025,
-				"class": {
-					"registry_name": "hedgemen:character_class",
-					"class_name": "hedgemen:class_sentient_food"
-				}
+			"strength": 1025,
+        	"dexterity": 1025,
+        	"constitution": 1025,
+			"intelligence": 1025,
+			"wisdom": 1025,
+			"charisma": 1025,
+			"class": {
+				"registry_name": "hedgemen:class_sentient_food",
+				"class_name": "sentient_food"
 			}
 		}
 	]

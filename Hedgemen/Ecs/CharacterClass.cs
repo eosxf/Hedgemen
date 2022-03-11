@@ -1,13 +1,15 @@
 ﻿using Hgm.IO.Serialization;
+using Hgm.Utilities;
 
 namespace Hgm.Ecs;
 
-public class CharacterClass : IGameEventHandler, ISerializableState
+public class CharacterClass : IGameEventHandler, ISerializableState, IPostInitializable<CharacterClass>
 {
 	public string ClassName { get; set; } = "nothing";
 
 	public void Propagate(GameEvent gameEvent)
 	{
+		
 	}
 
 	public SerializationState GetObjectState()
@@ -21,4 +23,6 @@ public class CharacterClass : IGameEventHandler, ISerializableState
 	{
 		ClassName = state.GetValue("class_name", "nothing");
 	}
+
+	public virtual CharacterClass Initialize() => this;
 }

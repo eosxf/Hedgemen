@@ -10,9 +10,12 @@ public class Kaze
 {
 	public KazeRegistry Registry { get; }
 	
+	public ObjectRegistry NewRegistry { get; } // test
+	
 	public Kaze(KazeInitStep init)
 	{
 		Registry = init.Registry;
+		NewRegistry = new ObjectRegistry();
 	}
 }
 

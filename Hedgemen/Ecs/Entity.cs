@@ -12,9 +12,9 @@ public delegate void ComponentEventWrapper(GameEvent e);
 
 public delegate void ComponentEvent<in TEvent>(TEvent e) where TEvent : GameEvent;
 
-public class Entity : IEntity
+public class Entity : ISerializableState
 {
-	private readonly IDictionary<Type, IComponent> _components = new CachedDictionary<Type, IComponent>();
+	private readonly IDictionary<Type, Component> _components = new CachedDictionary<Type, Component>();
 
 	public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
 	{
@@ -93,13 +93,13 @@ public class Entity : IEntity
 		}
 	}
 
-	public void AddComponent(IComponent component)
+	public void AddComponent(Component component)
 	{
 		InternalAddComponent(component);
 		component.Initialize();
 	}
 
-	private void InternalAddComponent(IComponent component)
+	private void InternalAddComponent(Component component)
 	{
 		var infoQuery = component.QueryComponentInfo();
 

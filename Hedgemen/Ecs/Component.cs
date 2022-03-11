@@ -13,7 +13,7 @@ namespace Hgm.Ecs;
 /// <summary>
 /// Component class for <see cref="Hgm.Ecs.Entity" />
 /// </summary>
-public abstract class Component : IComponent
+public abstract class Component : ISerializableState
 {
 	private readonly IDictionary<Type, ComponentEventWrapper> _registeredEvents = new Dictionary<Type, ComponentEventWrapper>();
 	public Entity Self { get; private set; }
@@ -40,10 +40,10 @@ public abstract class Component : IComponent
 		ThrowIfInitialized();
 		_initialized = true;
 		InitializeSelf();
-		InitializeSchema(schema);
+		InitializeFromSchema(schema);
 	}
 
-	protected virtual void InitializeSchema(ComponentSchema schema)
+	protected virtual void InitializeFromSchema(ComponentSchema schema)
 	{
 		
 	}

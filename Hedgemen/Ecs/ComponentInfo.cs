@@ -5,13 +5,13 @@ using Hgm.Register;
 namespace Hgm.Ecs;
 
 /// <summary>
-/// <see cref="Hgm.Ecs.IComponent" /> metadata that can be queried for any instantiated component.
+/// <see cref="Hgm.Ecs.Component" /> metadata that can be queried for any instantiated component.
 /// </summary>
 public readonly struct ComponentInfo
 {
-	public static ComponentInfo New(IComponent obj)
+	public static ComponentInfo New(Component obj)
 	{
-		return new()
+		return new ComponentInfo
 		{
 			RegistryName = NamespacedString.Default,
 			AccessType = obj.GetType(),

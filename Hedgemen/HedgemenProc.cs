@@ -26,10 +26,11 @@ public sealed class HedgemenProc : Game, IHedgemen
 	protected override void Initialize()
 	{
 		Hedgemen.RegisterAssemblies(typeof(HedgemenProc), typeof(object));
-		TestKaze();
+		//TestKaze();
+		Ecps.EcpsMain.Sandbox();
 		//TestEcs();
 		//TestSchema();
-		TestNewSerialization();
+		//TestNewSerialization();
 		_spriteBatch = new SpriteBatch(_manager.GraphicsDevice);
 	}
 
@@ -57,15 +58,15 @@ public sealed class HedgemenProc : Game, IHedgemen
 
 		var state = JsonSerializer.Deserialize<SerializationState>(file.ReadString(), options)!;
 		var newEntity = state.Instantiate<Entity>();
-		Console.WriteLine($"NewEntity Character Sheet Strength: {newEntity.GetComponent<CharacterSheet>().Strength}");
+		Console.WriteLine($"New entity character sheet strength: {newEntity.GetComponent<CharacterSheet>().Strength}");
 	}
 
 	private void TestKaze()
 	{
 		var hedgemen = new HedgemenMod();
 		hedgemen.Initialize();
-		var sheet = Hedgemen.Kaze.Registry.Components["hedgemen:character_sheet"]() as CharacterSheet;
-		Console.WriteLine($"Sheet: {sheet.Strength}");
+		//var sheet = Hedgemen.Kaze.Registry.Components["hedgemen:character_sheet"]() as CharacterSheet;
+		//Console.WriteLine($"Sheet: {sheet.Strength}");
 	}
 
 	private void TestEcs()
@@ -92,14 +93,11 @@ public sealed class HedgemenProc : Game, IHedgemen
 	private void TestSchema()
 	{
 		var schema = new EntitySchema(new File("sentient_apple_pie_schema.json"));
-		Console.WriteLine(schema);
-
-		var foodSchema = schema.Components[0];
-
-		var entity = new Entity();
-		entity.ReadEntitySchema(schema);
-		
-		Console.WriteLine(entity.GetComponent<CharacterSheet>().Class.ClassName);
+		Console.WriteLine($"schema component count: {schema.Components.Count}");
+		Console.WriteLine($"schema component [0]: {schema.Components[0].RegistryName}");
+		Console.WriteLine($"schema character sheet strength: {schema.Components[0].GetValue("strength", 0)}");
+		var schemaClass = schema.Components[0].GetValue<ObjectSchema>("class").Instantiate<CharacterClass>();
+		Console.WriteLine($"Class from schema: {schemaClass.ClassName}");
 	}
 
 	private void SerializeJson(Entity entity)

@@ -1,4 +1,7 @@
 Some design decisions for Hedgemen:
 
-1: Hierarchies can only be 1 child deep (ie Parent -> Child, but not Parent -> Child -> ChildOfChild). Some systems may be exempt, such as UI, game events.
+1: Hierarchies can only be 1 child deep (ie Parent -> Child, but not Parent -> Child -> ChildOfChild). Such caveats are:
+	- some systems may be exempt, such as UI, game events.
+	- interfaces and abstract classes are exempt, but use discretion with abstract classes of abstract classes
+
 2: Compatibility with ahead of time runtimes. Mods need not follow this rule, since ahead of time builds will not have modding support to begin with.

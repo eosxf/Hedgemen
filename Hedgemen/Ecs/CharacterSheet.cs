@@ -25,16 +25,11 @@ public class CharacterSheet : Component
 
 	public CharacterClass Class { get; set; }
 
-	public ICharacterClass SelfClass => Self.GetComponent<ICharacterClass>();
-
 	public void ChangeClass(ChangeClassEvent e)
 	{
 		var oldClass = Class.ClassName;
 		Class.ClassName = e.ClassName;
-		//Console.WriteLine($"Changed class from '{oldClass}' to '{e.ClassName}'");
 		Hedgemen.Logger.Debug($"Changed class from '{oldClass}' to '{e.ClassName}'");
-
-		Console.WriteLine($"Does Self have this component (should always be true?: {Self.HasComponent<CharacterSheet>()}");
 	}
 
 	public override ComponentInfo QueryComponentInfo()
@@ -68,11 +63,17 @@ public class CharacterSheet : Component
 		Intelligence = state.GetValue("intelligence", 10);
 		Wisdom = state.GetValue("wisdom", 10);
 		Charisma = state.GetValue("charisma", 10);
-		Class = state.GetState("class")?.Instantiate<CharacterClass>();
+		Class = state.GetState("class")?.Instantiate<CharacterClass>().Initialize();
 	}
 
-	protected override void InitializeSchema(ComponentSchema schema)
+	protected override void InitializeFromSchema(ComponentSchema schema)
 	{
-		
+		Strength = schema.GetValue("strength", 10);
+		Dexterity = schema.GetValue("dexterity", 10);
+		Constitution = schema.GetValue("constitution", 10);
+		Intelligence = schema.GetValue("intelligence", 10);
+		Wisdom = schema.GetValue("wisdom", 10);
+		Charisma = schema.GetValue("charisma", 10);
+		Class = schema.GetValue<ObjectSchema>("class").Instantiate<CharacterClass>();
 	}
 }

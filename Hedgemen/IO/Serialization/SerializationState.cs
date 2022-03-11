@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -33,10 +32,11 @@ public class SerializationState
 		_fields.Add(name, val);
 	}
 
+	// todo maybe put in static method for code reuse
 	public T GetValue<T>(string name, T defaultReturn = default)
 	{
 		if (!_fields.ContainsKey(name)) return defaultReturn;
-
+		
 		var json = _fields[name];
 		var obj = defaultReturn;
 
@@ -47,6 +47,11 @@ public class SerializationState
 			obj = jsonElement.Deserialize<T>();
 
 		return obj;
+	}
+
+	public void GetValue<T>(string name, out T value)
+	{
+		value = GetValue(name, default(T));
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

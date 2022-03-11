@@ -52,7 +52,7 @@ public class EntitySchema : ISchema
 	public class JsonView
 	{
 		[JsonInclude] [JsonPropertyName("components")]
-		public List<ComponentSchema.JsonView> Components;
+		public List<ComponentSchema.JsonView> Components = new();
 
 		[JsonInclude] [JsonPropertyName("inherits")]
 		public string Inherits = string.Empty;

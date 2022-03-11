@@ -3,7 +3,7 @@ using Hgm.Register;
 
 namespace Hgm.Modding;
 
-public delegate IComponent ComponentRegister();
+public delegate Component ComponentRegister();
 
 public class KazeRegistry
 {
@@ -12,7 +12,7 @@ public class KazeRegistry
 	{
 		
 	}
-
+	
 	public KazeRegistry(int initialCapacities)
 	{
 		Components = new ObjectRegistry<ComponentRegister>(initialCapacities);
