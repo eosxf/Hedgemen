@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 using Hgm.Utilities;
@@ -16,6 +15,41 @@ public class Entity : ISerializableState
 {
 	private readonly IDictionary<Type, Component> _components = new CachedDictionary<Type, Component>();
 
+	public Entity()
+	{
+		
+	}
+
+	public Entity(EntitySchema schema)
+	{
+		ReadEntitySchema(schema);
+	}
+
+	public Entity(SerializationState state)
+	{
+		SetObjectState(state);
+	}
+	
+	public SerializationState GetObjectState()
+	{
+		var state = new SerializationState(this);
+		foreach (var component in _components.Values)
+			state.AddValue(component.QueryComponentInfo().RegistryName, component.GetObjectState());
+
+		return state;
+	}
+
+	public void SetObjectState(SerializationState state)
+	{
+		foreach (var componentName in state.Fields)
+		{
+			var componentSerializationState = state.GetState(componentName.Key);
+			var component = componentSerializationState.Instantiate<Component>(Hedgemen.RegisteredAssemblies, false);
+			InternalAddComponent(component);
+			component.ReadFromSerializationState(componentSerializationState);
+		}
+	}
+
 	public TEvent Propagate<TEvent>(TEvent e) where TEvent : GameEvent
 	{
 		foreach (var component in _components.Values)
@@ -29,7 +63,7 @@ public class Entity : ISerializableState
 
 			if (component.IsEventRegistered<TEvent>())
 			{
-				var result = component.HandleEvent(e);
+				bool result = component.HandleEvent(e);
 				if (result) e.Handled = true;
 			}
 
@@ -63,33 +97,13 @@ public class Entity : ISerializableState
 		return false;
 	}
 
-	public SerializationState GetObjectState()
-	{
-		var state = new SerializationState(this);
-		foreach(var component in _components.Values)
-			state.AddValue(component.QueryComponentInfo().RegistryName, component.GetObjectState());
-
-		return state;
-	}
-
-	public void SetObjectState(SerializationState state)
-	{
-		foreach (var componentName in state.Fields)
-		{
-			var componentSerializationState = state.GetState(componentName.Key);
-			var component = componentSerializationState.Instantiate<Component>(Hedgemen.RegisteredAssemblies, false);
-			InternalAddComponent(component);
-			component.Initialize(componentSerializationState);
-		}
-	}
-
 	public void ReadEntitySchema(EntitySchema schema)
 	{
 		foreach (var componentSchema in schema.Components)
 		{
 			var component = Hedgemen.Kaze.Registry.Components[componentSchema.RegistryName]();
 			InternalAddComponent(component);
-			component.Initialize(componentSchema);
+			component.ReadFromComponentSchema(componentSchema);
 		}
 	}
 

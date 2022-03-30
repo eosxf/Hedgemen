@@ -1,4 +1,4 @@
-﻿namespace Hgm.Ecps;
+﻿namespace Hgm.EcsNew;
 
 public abstract class Event
 {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.Serialization;
-using Hgm.Ecs.Text;
+﻿using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
 
 namespace Hgm.Ecs;
@@ -10,12 +8,6 @@ namespace Hgm.Ecs;
 /// </summary>
 public class CharacterSheet : Component
 {
-	protected override void InitializeSelf()
-	{
-		Class = new CharacterClass { ClassName = "warrior" };
-		RegisterEvent<ChangeClassEvent>(ChangeClass);
-	}
-
 	public int Strength { get; set; }
 	public int Dexterity { get; set; }
 	public int Constitution { get; set; }
@@ -25,9 +17,15 @@ public class CharacterSheet : Component
 
 	public CharacterClass Class { get; set; }
 
+	protected override void InitializeComponent()
+	{
+		Class = new CharacterClass { ClassName = "warrior" };
+		RegisterEvent<ChangeClassEvent>(ChangeClass);
+	}
+
 	public void ChangeClass(ChangeClassEvent e)
 	{
-		var oldClass = Class.ClassName;
+		string oldClass = Class.ClassName;
 		Class.ClassName = e.ClassName;
 		Hedgemen.Logger.Debug($"Changed class from '{oldClass}' to '{e.ClassName}'");
 	}
@@ -63,10 +61,10 @@ public class CharacterSheet : Component
 		Intelligence = state.GetValue("intelligence", 10);
 		Wisdom = state.GetValue("wisdom", 10);
 		Charisma = state.GetValue("charisma", 10);
-		Class = state.GetState("class")?.Instantiate<CharacterClass>().Initialize();
+		Class = state.GetState("class")?.Instantiate<CharacterClass>();
 	}
 
-	protected override void InitializeFromSchema(ComponentSchema schema)
+	protected override void ReadComponentSchema(ComponentSchema schema)
 	{
 		Strength = schema.GetValue("strength", 10);
 		Dexterity = schema.GetValue("dexterity", 10);

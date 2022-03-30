@@ -72,13 +72,13 @@ public class DefaultLogger : ILogger
 				break;
 		}
 
-		var dateTime = DateTime.Now.ToString(DateTimeFormat);
-		var className = stackFrame.GetMethod() != null ? stackFrame.GetMethod().DeclaringType.Name : "null";
-		var fileName = stackFrame.GetFileName();
-		var methodName = stackFrame.GetMethod() != null ? stackFrame.GetMethod().Name : "null";
-		var lineNumber = stackFrame.GetFileLineNumber();
+		string dateTime = DateTime.Now.ToString(DateTimeFormat);
+		string className = stackFrame.GetMethod() != null ? stackFrame.GetMethod().DeclaringType.Name : "null";
+		string fileName = stackFrame.GetFileName();
+		string methodName = stackFrame.GetMethod() != null ? stackFrame.GetMethod().Name : "null";
+		int lineNumber = stackFrame.GetFileLineNumber();
 
-		var consoleMessage = Format
+		string consoleMessage = Format
 			.Replace("%S", logLevel.ToString())
 			.Replace("%T", dateTime)
 			.Replace("%c", className)
@@ -99,5 +99,8 @@ public class DefaultLogger : ILogger
 		return logLevel >= LogLevel;
 	}
 
-	public override string ToString() => builder.ToString();
+	public override string ToString()
+	{
+		return builder.ToString();
+	}
 }

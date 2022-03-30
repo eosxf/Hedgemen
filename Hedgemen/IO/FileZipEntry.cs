@@ -118,7 +118,7 @@ public class FileZipEntry : IFile
 	private string GetExtension()
 	{
 		if (!Exists) return string.Empty;
-		var entryName = entry.FullName;
+		string entryName = entry.FullName;
 		return entryName.Substring(entryName.LastIndexOf('.'));
 	}
 }

@@ -1,19 +1,19 @@
 {
-	"registry_name": "hedgemen:sentient_apple_pie",
-	"inherits": "hedgemen:sentient_food",
-	"components": [
-		{
-			"registry_name": "hedgemen:character_sheet",
-			"strength": 1025,
-        	"dexterity": 1025,
-        	"constitution": 1025,
-			"intelligence": 1025,
-			"wisdom": 1025,
-			"charisma": 1025,
-			"class": {
-				"registry_name": "hedgemen:class_sentient_food",
-				"class_name": "sentient_food"
-			}
-		}
-	]
+    "registry_name": "hedgemen:sentient_apple_pie",
+    "inherits": "hedgemen:sentient_food",
+    "components": [
+        {
+            "registry_name": "hedgemen:character_sheet",
+            "strength": 1025,
+            "dexterity": 1025,
+            "constitution": 1025,
+            "intelligence": 1025,
+            "wisdom": 1025,
+            "charisma": 1025,
+            "class": {
+                "registry_name": "hedgemen:class_sentient_food",
+                "class_name": "sentient_food"
+            }
+        }
+    ]
 }

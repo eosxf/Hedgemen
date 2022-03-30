@@ -8,25 +8,27 @@ using Hgm.Utilities;
 namespace Hgm;
 
 /// <summary>
-/// The global repository for all Hedgemen state
+///     The global repository for all Hedgemen state
 /// </summary>
 public static class Hedgemen
 {
-	private static bool _initialized = false;
-	
-	public static IHedgemen Proc { get; private set; }
+	private static bool _initialized;
 
-	private static Dictionary<string, Assembly> _registeredAssemblies = new();
-	
+	private static Dictionary<string, Assembly> _registeredAssemblies;
+
+	public static IHedgemenBackend Backend { get; private set; }
+
 	public static Kaze Kaze { get; private set; }
 
 	public static IReadOnlyDictionary<string, Assembly> RegisteredAssemblies => _registeredAssemblies;
+
+	public static ILogger Logger { get; private set; }
 
 	public static void RegisterAssembly(Type type)
 	{
 		lock (_registeredAssemblies)
 		{
-			var assemblyName = type.Assembly.GetName().Name;
+			string assemblyName = type.Assembly.GetName().Name;
 			if (assemblyName == null)
 				throw new InvalidOperationException($"Assembly name from {type} could not be discerned, " +
 				                                    "this should not happen.");
@@ -34,19 +36,17 @@ public static class Hedgemen
 		}
 	}
 
-	private static ILogger _logger;
-
-	public static ILogger Logger => _logger;
-
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static void RegisterAssemblies(params Type[] types)
 	{
-		foreach(var type in types)
+		foreach (var type in types)
 			RegisterAssembly(type);
 	}
-	
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static void RegisterAssemblies(IEnumerable<Type> types)
 	{
-		foreach(var type in types)
+		foreach (var type in types)
 			RegisterAssembly(type);
 	}
 
@@ -60,44 +60,47 @@ public static class Hedgemen
 
 		if (!initStateProperlySet)
 			throw new ArgumentException($"'{nameof(init)}' is not properly initialized!");
-		
-		Proc = init.Proc;
+
+		Backend = init.Backend;
 		Kaze = new Kaze(init.KazeInitStep);
-		_logger = init.Logger;
+		Logger = init.Logger;
 		_initialized = true;
+		_registeredAssemblies = new Dictionary<string, Assembly>();
 	}
 
 	/// <summary>
-	/// Finishing step for Hedgemen. This will clear all game state and initialized data.
+	///     Finishing step for Hedgemen. This will clear all game state and initialized data.
 	/// </summary>
 	[MethodImpl(MethodImplOptions.Synchronized)]
 	public static void Finish()
 	{
-		Proc.Exit();
-		Proc.Dispose();
+		Backend.Exit();
+		Backend.Dispose();
 		ClearState();
 		_initialized = false;
 	}
 
 	private static void ClearState()
 	{
-		Proc = null;
+		Backend = null;
 		_registeredAssemblies.Clear();
 	}
 }
 
 /// <summary>
-/// Responsible for holding values to initialize Hedgemen. Values here should be initialized and handlers of
-/// <see cref="HedgemenInitStep"/> should throw errors for invalid values.
+///     Responsible for holding values to initialize Hedgemen. Values here should be initialized and handlers of
+///     <see cref="HedgemenInitStep" /> should throw errors for invalid values.
 /// </summary>
 public struct HedgemenInitStep : IInitStep
 {
-	public IHedgemen Proc;
+	public IHedgemenBackend Backend;
 	public KazeInitStep KazeInitStep;
 	public ILogger Logger;
 
-	public bool IsProperlyInitialized() => 
-		Proc != null &&
-		KazeInitStep.IsProperlyInitialized() &&
-		Logger != null;
+	public bool IsProperlyInitialized()
+	{
+		return Backend != null &&
+		       KazeInitStep.IsProperlyInitialized() &&
+		       Logger != null;
+	}
 }

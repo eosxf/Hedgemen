@@ -8,9 +8,8 @@ namespace Hgm.IO;
 
 public class Directory : IDirectory
 {
-	private readonly DirectoryInfo _info;
-
 	private readonly string _evaluatedPath;
+	private readonly DirectoryInfo _info;
 
 	public Directory(string directoryPath, FsType fsType = FsType.Local)
 	{
@@ -68,7 +67,7 @@ public class Directory : IDirectory
 
 	public void CreateSubDirectories(params string[] names)
 	{
-		foreach (var directoryName in names)
+		foreach (string directoryName in names)
 		{
 			var directory = CreateSubDirectory(directoryName);
 		}
@@ -110,7 +109,7 @@ public class Directory : IDirectory
 	{
 		var files = new List<IFile>(fileNames.Length);
 
-		foreach (var fileName in fileNames) files.Add(FindFile(fileName));
+		foreach (string fileName in fileNames) files.Add(FindFile(fileName));
 
 		return files;
 	}
@@ -124,7 +123,7 @@ public class Directory : IDirectory
 	{
 		var directories = new List<IDirectory>(directoryNames.Length);
 
-		foreach (var directoryName in directoryNames) directories.Add(FindDirectory(directoryName));
+		foreach (string directoryName in directoryNames) directories.Add(FindDirectory(directoryName));
 
 		return directories;
 	}

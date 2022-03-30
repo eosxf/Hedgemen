@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
 using Hgm.IO;
 using Hgm.Modding;
-using Hgm.Register;
 using Hgm.Utilities;
-using File = Hgm.IO.File;
 
 namespace Hgm;
 
@@ -14,7 +11,7 @@ public static class Program
 	{
 		var initStep = new HedgemenInitStep
 		{
-			Proc = new HedgemenProc(),
+			Backend = new HedgemenBackend(),
 			KazeInitStep = new KazeInitStep
 			{
 				Registry = new KazeRegistry()
@@ -25,7 +22,7 @@ public static class Program
 		try
 		{
 			Hedgemen.InitializeHedgemen(initStep);
-			Hedgemen.Proc.Run();
+			Hedgemen.Backend.Run();
 			IFile hedgemenLogOutputFile = new File("hedgemen.log");
 			hedgemenLogOutputFile.WriteString(Hedgemen.Logger.ToString());
 			Hedgemen.Finish();
@@ -37,7 +34,7 @@ public static class Program
 			// be thrown, but I'm lazy
 			IFile hedgemenLogOutputFile = new File("hedgemen.log");
 			hedgemenLogOutputFile.WriteString(Hedgemen.Logger.ToString());
-            throw;
-        }
+			throw;
+		}
 	}
 }

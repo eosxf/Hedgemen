@@ -9,25 +9,23 @@ using Hgm.IO.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using CharacterSheet = Hgm.Ecs.CharacterSheet;
 
 namespace Hgm;
 
-public sealed class HedgemenProc : Game, IHedgemen
+public sealed class HedgemenBackend : Game, IHedgemenBackend
 {
 	private readonly GraphicsDeviceManager _manager;
 	private SpriteBatch _spriteBatch;
 
-	public HedgemenProc()
+	public HedgemenBackend()
 	{
 		_manager = new GraphicsDeviceManager(this);
 	}
 
 	protected override void Initialize()
 	{
-		Hedgemen.RegisterAssemblies(typeof(HedgemenProc), typeof(object));
-		//TestKaze();
-		Ecps.EcpsMain.Sandbox();
+		TestKaze();
+		EcsNew.EcsNewSandbox.Sandbox();
 		//TestEcs();
 		//TestSchema();
 		//TestNewSerialization();
@@ -51,7 +49,7 @@ public sealed class HedgemenProc : Game, IHedgemen
 		{
 			WriteIndented = true
 		};
-		
+
 		IFile file = new File("new_serialization.json");
 		string json = JsonSerializer.Serialize(entity.GetObjectState(), options);
 		file.WriteString(json);
@@ -65,8 +63,6 @@ public sealed class HedgemenProc : Game, IHedgemen
 	{
 		var hedgemen = new HedgemenMod();
 		hedgemen.Initialize();
-		//var sheet = Hedgemen.Kaze.Registry.Components["hedgemen:character_sheet"]() as CharacterSheet;
-		//Console.WriteLine($"Sheet: {sheet.Strength}");
 	}
 
 	private void TestEcs()
@@ -81,7 +77,7 @@ public sealed class HedgemenProc : Game, IHedgemen
 		sheet.Strength = 1025;
 		sheet.Intelligence = 10;
 		sheet.Charisma = 15;
-		
+
 		Console.WriteLine(entity.GetComponent<CharacterSheet>().QueryComponentInfo());
 
 		var eChangeClass = entity.Propagate(new ChangeClassEvent("archer"));
@@ -93,11 +89,8 @@ public sealed class HedgemenProc : Game, IHedgemen
 	private void TestSchema()
 	{
 		var schema = new EntitySchema(new File("sentient_apple_pie_schema.json"));
-		Console.WriteLine($"schema component count: {schema.Components.Count}");
-		Console.WriteLine($"schema component [0]: {schema.Components[0].RegistryName}");
-		Console.WriteLine($"schema character sheet strength: {schema.Components[0].GetValue("strength", 0)}");
-		var schemaClass = schema.Components[0].GetValue<ObjectSchema>("class").Instantiate<CharacterClass>();
-		Console.WriteLine($"Class from schema: {schemaClass.ClassName}");
+		var entity = new Entity(schema);
+		Console.WriteLine(entity.GetComponent<CharacterSheet>().Class);
 	}
 
 	private void SerializeJson(Entity entity)
@@ -119,7 +112,7 @@ public sealed class HedgemenProc : Game, IHedgemen
 
 		var entity2 = entity2Info.Instantiate<Entity>();
 		Console.WriteLine(entity.GetComponent<CharacterSheet>());
-		
+
 		Console.WriteLine(entity2.GetComponent<CharacterSheet>().Intelligence);
 
 		Console.WriteLine($"obj2 class_name: {entity2.GetComponent<CharacterSheet>().Class.ClassName}");

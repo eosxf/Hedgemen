@@ -6,9 +6,8 @@ namespace Hgm.IO;
 
 public class File : IFile
 {
-	private readonly FileInfo _info;
-
 	private readonly string _evaluatedPath;
+	private readonly FileInfo _info;
 
 	public File(string filePath, FsType fsType = FsType.Local)
 	{
@@ -171,7 +170,7 @@ public class File : IFile
 
 	public override int GetHashCode()
 	{
-		var hash = 1;
+		int hash = 1;
 		hash = hash * 37 + _info.GetHashCode();
 		hash = hash * 67 + FullName.GetHashCode();
 		return hash;

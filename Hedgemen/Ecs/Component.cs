@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.Serialization;
 using System.Text;
 using Hgm.Ecs.Text;
 using Hgm.IO.Serialization;
@@ -11,41 +10,53 @@ using Hgm.Utilities;
 namespace Hgm.Ecs;
 
 /// <summary>
-/// Component class for <see cref="Hgm.Ecs.Entity" />
+///	Component class for <see cref="Hgm.Ecs.Entity" />
 /// </summary>
 public abstract class Component : ISerializableState
 {
-	private readonly IDictionary<Type, ComponentEventWrapper> _registeredEvents = new Dictionary<Type, ComponentEventWrapper>();
+	private readonly IDictionary<Type, ComponentEventWrapper> _registeredEvents =
+		new Dictionary<Type, ComponentEventWrapper>();
+
+	private bool _initialized;
+
 	public Entity Self { get; private set; }
 
-	private bool _initialized = false;
+	public bool IsActive { get; set; } = true;
+
+	public virtual SerializationState GetObjectState()
+	{
+		return new SerializationState(this);
+	}
+
+	public virtual void SetObjectState(SerializationState state)
+	{
+	}
 
 	public void Initialize()
 	{
 		ThrowIfInitialized();
 		_initialized = true;
-		InitializeSelf();
+		InitializeComponent();
 	}
 
-	public void Initialize(SerializationState state)
+	internal void ReadFromSerializationState(SerializationState state)
 	{
 		ThrowIfInitialized();
 		_initialized = true;
-		InitializeSelf();
+		InitializeComponent();
 		SetObjectState(state);
 	}
 
-	public void Initialize(ComponentSchema schema)
+	internal void ReadFromComponentSchema(ComponentSchema schema)
 	{
 		ThrowIfInitialized();
 		_initialized = true;
-		InitializeSelf();
-		InitializeFromSchema(schema);
+		InitializeComponent();
+		ReadComponentSchema(schema);
 	}
 
-	protected virtual void InitializeFromSchema(ComponentSchema schema)
+	protected virtual void ReadComponentSchema(ComponentSchema schema)
 	{
-		
 	}
 
 	private void ThrowIfInitialized()
@@ -54,9 +65,7 @@ public abstract class Component : ISerializableState
 			throw new InvalidOperationException($"Component '{GetType()}' is already initialized.");
 	}
 
-	protected abstract void InitializeSelf();
-
-	public bool IsActive { get; set; } = true;
+	protected abstract void InitializeComponent();
 
 	public bool HandleEvent(GameEvent e)
 	{
@@ -66,7 +75,7 @@ public abstract class Component : ISerializableState
 		return true;
 	}
 
-	public void RegisterEvent<TEvent>(ComponentEvent<TEvent> e) where TEvent : GameEvent
+	protected void RegisterEvent<TEvent>(ComponentEvent<TEvent> e) where TEvent : GameEvent
 	{
 		if (e == null)
 			throw new Exception("Registered events cannot be null!");
@@ -90,9 +99,9 @@ public abstract class Component : ISerializableState
 		string assemblyName = GetType().Assembly.GetName().Name!;
 		string typeName = ConvertTypeNameToSnakeCase();
 
-		return new NamespacedString
-			(assemblyName.ToLower(CultureInfo.InvariantCulture),
-			 typeName);
+		return new NamespacedString(
+			assemblyName.ToLower(CultureInfo.InvariantCulture),
+			typeName);
 	}
 
 	private string ConvertTypeNameToSnakeCase()
@@ -101,26 +110,16 @@ public abstract class Component : ISerializableState
 		var uppercaseOccurrences = typeName.AllUppercaseInstances();
 		var builder = new StringBuilder(typeName.Length + uppercaseOccurrences.Count);
 		builder.Append(typeName);
-		
-		foreach (var occurrence in uppercaseOccurrences)
+
+		foreach (char occurrence in uppercaseOccurrences)
 			builder.Replace(occurrence.ToString(), "_" + char.ToLowerInvariant(occurrence));
-		
+
 		// remove the likely char[0] _ char with string.Empty
 		// since classes should be PascalCase and thus would create _
 		if (builder[0] == '_')
 			builder.Replace("_", string.Empty, 0, 1);
-		
+
 		return builder.ToString();
-	}
-
-	public virtual SerializationState GetObjectState()
-	{
-		return new SerializationState(this);
-	}
-
-	public virtual void SetObjectState(SerializationState state)
-	{
-		
 	}
 
 	public bool IsEventRegistered<TEvent>() where TEvent : GameEvent
@@ -142,6 +141,5 @@ public abstract class Component : ISerializableState
 
 	public virtual void OnEventPropagated(GameEvent gameEvent)
 	{
-		
 	}
 }

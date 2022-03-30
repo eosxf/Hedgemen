@@ -16,7 +16,7 @@ public static class SchemaExtensions
 		var func = Hedgemen.Kaze.NewRegistry.Get<Func<T>>(schema.RegistryName);
 
 		value = func();
-		
+
 		return value;
 	}
 }

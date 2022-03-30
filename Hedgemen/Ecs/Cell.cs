@@ -2,9 +2,8 @@
 
 public class Cell : Component
 {
-	protected override void InitializeSelf()
+	protected override void InitializeComponent()
 	{
-		
 	}
 
 	public override ComponentInfo QueryComponentInfo()

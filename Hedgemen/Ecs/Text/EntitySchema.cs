@@ -17,11 +17,11 @@ public class EntitySchema : ISchema
 		Initialize(view);
 	}
 
-	public NamespacedString RegistryName { get; private set; }
-
 	public NamespacedString Inherits { get; private set; }
 
 	public IReadOnlyList<ComponentSchema> Components => _components;
+
+	public NamespacedString RegistryName { get; private set; }
 
 	private void Initialize(JsonView view)
 	{
@@ -51,13 +51,16 @@ public class EntitySchema : ISchema
 
 	public class JsonView
 	{
-		[JsonInclude] [JsonPropertyName("components")]
+		[JsonInclude]
+		[JsonPropertyName("components")]
 		public List<ComponentSchema.JsonView> Components = new();
 
-		[JsonInclude] [JsonPropertyName("inherits")]
+		[JsonInclude]
+		[JsonPropertyName("inherits")]
 		public string Inherits = string.Empty;
 
-		[JsonInclude] [JsonPropertyName("registry_name")]
+		[JsonInclude]
+		[JsonPropertyName("registry_name")]
 		public string RegistryName = NamespacedString.Default;
 	}
 }

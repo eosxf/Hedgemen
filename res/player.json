@@ -1,18 +1,18 @@
 {
-  "registry_name": "hedgemen:player",
-  "inherits": "hedgemen:living_entity",
-  "components": [
-    {
-      "registry_name": "hedgemen:character_sheet",
-      "fields": {
-        "strength": 15,
-        "dexterity": 15,
-        "constitution": 15,
-        "intelligence": 15,
-        "wisdom": 15,
-        "charisma": 15,
-        "class": "hedgemen:warrior_class"
-      }
-    }
-  ]
+    "registry_name": "hedgemen:player",
+    "inherits": "hedgemen:living_entity",
+    "components": [
+        {
+            "registry_name": "hedgemen:character_sheet",
+            "fields": {
+                "strength": 15,
+                "dexterity": 15,
+                "constitution": 15,
+                "intelligence": 15,
+                "wisdom": 15,
+                "charisma": 15,
+                "class": "hedgemen:warrior_class"
+            }
+        }
+    ]
 }

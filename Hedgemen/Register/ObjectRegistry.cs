@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -12,16 +11,18 @@ public sealed class ObjectRegistry<TValue> : IReadOnlyDictionary<NamespacedStrin
 	public ObjectRegistry()
 		: this(1337)
 	{
-		
 	}
-	
+
 	public ObjectRegistry(int initialCapacity)
 	{
 		_registries = new Dictionary<NamespacedString, TValue>(initialCapacity);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public IEnumerator<KeyValuePair<NamespacedString, TValue>> GetEnumerator() => _registries.GetEnumerator();
+	public IEnumerator<KeyValuePair<NamespacedString, TValue>> GetEnumerator()
+	{
+		return _registries.GetEnumerator();
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	IEnumerator IEnumerable.GetEnumerator()
@@ -36,10 +37,16 @@ public sealed class ObjectRegistry<TValue> : IReadOnlyDictionary<NamespacedStrin
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool ContainsKey(NamespacedString key) => _registries.ContainsKey(key);
+	public bool ContainsKey(NamespacedString key)
+	{
+		return _registries.ContainsKey(key);
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool TryGetValue(NamespacedString key, out TValue value) => _registries.TryGetValue(key, out value);
+	public bool TryGetValue(NamespacedString key, out TValue value)
+	{
+		return _registries.TryGetValue(key, out value);
+	}
 
 	public TValue this[NamespacedString key]
 	{
@@ -63,14 +70,17 @@ public sealed class ObjectRegistry<TValue> : IReadOnlyDictionary<NamespacedStrin
 	{
 		bool registriesHasKey = _registries.TryGetValue(key, out var value);
 
-		if (!registriesHasKey) 
+		if (!registriesHasKey)
 			return default;
 
 		return value;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public TValue Get<T>(NamespacedString key) where T : TValue => (T)Get(key);
+	public TValue Get<T>(NamespacedString key) where T : TValue
+	{
+		return (T) Get(key);
+	}
 
 	public bool Register(NamespacedString key, TValue value)
 	{
@@ -78,7 +88,7 @@ public sealed class ObjectRegistry<TValue> : IReadOnlyDictionary<NamespacedStrin
 			return false;
 		if (value is null)
 			return false;
-		
+
 		_registries.Add(key, value);
 		return true;
 	}
@@ -91,16 +101,18 @@ public sealed class ObjectRegistry : IReadOnlyDictionary<NamespacedString, objec
 	public ObjectRegistry()
 		: this(1337)
 	{
-		
 	}
-	
+
 	public ObjectRegistry(int initialCapacity)
 	{
 		_registries = new Dictionary<NamespacedString, object>(initialCapacity);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public IEnumerator<KeyValuePair<NamespacedString, object>> GetEnumerator() => _registries.GetEnumerator();
+	public IEnumerator<KeyValuePair<NamespacedString, object>> GetEnumerator()
+	{
+		return _registries.GetEnumerator();
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	IEnumerator IEnumerable.GetEnumerator()
@@ -115,10 +127,16 @@ public sealed class ObjectRegistry : IReadOnlyDictionary<NamespacedString, objec
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool ContainsKey(NamespacedString key) => _registries.ContainsKey(key);
+	public bool ContainsKey(NamespacedString key)
+	{
+		return _registries.ContainsKey(key);
+	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public bool TryGetValue(NamespacedString key, out object value) => _registries.TryGetValue(key, out value);
+	public bool TryGetValue(NamespacedString key, out object value)
+	{
+		return _registries.TryGetValue(key, out value);
+	}
 
 	public object this[NamespacedString key]
 	{
@@ -140,12 +158,12 @@ public sealed class ObjectRegistry : IReadOnlyDictionary<NamespacedString, objec
 
 	public TValue Get<TValue>(NamespacedString key)
 	{
-		bool registriesHasKey = _registries.TryGetValue(key, out var value);
+		bool registriesHasKey = _registries.TryGetValue(key, out object value);
 
-		if (!registriesHasKey) 
+		if (!registriesHasKey)
 			return default;
 
-		return (TValue)value;
+		return (TValue) value;
 	}
 
 	public bool Register(NamespacedString key, object value)
@@ -154,7 +172,7 @@ public sealed class ObjectRegistry : IReadOnlyDictionary<NamespacedString, objec
 			return false;
 		if (value is null)
 			return false;
-		
+
 		_registries.Add(key, value);
 		return true;
 	}

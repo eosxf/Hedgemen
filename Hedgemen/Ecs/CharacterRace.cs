@@ -6,8 +6,8 @@ namespace Hgm.Ecs;
 public abstract class CharacterRace : Component
 {
 	public string RaceName { get; set; }
-	
-	protected override void InitializeSelf()
+
+	protected override void InitializeComponent()
 	{
 		RaceName = "none";
 	}
@@ -22,7 +22,7 @@ public abstract class CharacterRace : Component
 		};
 	}
 
-	protected override void InitializeFromSchema(ComponentSchema schema)
+	protected override void ReadComponentSchema(ComponentSchema schema)
 	{
 		RaceName = schema.GetValue("race_name", "none");
 	}
